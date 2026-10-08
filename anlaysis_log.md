@@ -168,54 +168,58 @@ The average percentages were calculated across samples.
 
 ### 6.2 Mapping quality scores (MAPQ)
 
-Detailed mapping statistics were generated using:
+### MAPQ calculation verification and correction
 
-```bash
-for i in *-RG.bam
-do
-    samtools stats "$i" > ./mapqc/samtools_stats/"$i".stats.txt
-done
-```
+The initial MAPQ percentage calculation followed the ezRAD workflow document, which separated MAPQ scores using `head` and `tail`.
 
-All 273 statistics files were generated successfully.
+A subsequent verification found that 272 samples contained 60 MAPQ rows, but `354_PA01` contained only 54 rows.
 
-The percentage of reads with MAPQ ≥ 30 was calculated for each sample using the MAPQ frequency tables.
+Because the original calculation assumed all MAPQ scores were represented, the percentages were recalculated using the actual MAPQ scores in column 2.
+
+The original summary was preserved as `percent_MAPQ30_original.txt`.
+
+**Corrected calculation:**
 
 ```bash
 echo -e "sample\t%_MAPQ30" > percent_MAPQ30.txt
 
 for i in *.bam.stats.txt
 do
-    echo "$i"
-    a=$(grep '^MAPQ' "$i" | head -n +29 | awk '{s+=$3}END{print s}')
-    b=$(grep '^MAPQ' "$i" | tail -n -31 | awk '{s+=$3}END{print s}')
-    c=$(awk -v a="$a" -v b="$b" 'BEGIN {printf "%.2f\n", 100 * b/(a+b)}')
-    echo "$i" "$c" >> percent_MAPQ30.txt
+    awk -v sample="$i" '
+    $1 == "MAPQ" {
+        total += $3
+        if ($2 >= 30) high += $3
+    }
+    END {
+        if (total > 0)
+            printf "%s\t%.2f\n", sample, 100 * high / total
+        else
+            printf "%s\tNA\n", sample
+    }' "$i" >> percent_MAPQ30.txt
 done
 ```
 
-The summary file contained 274 lines: one header and 273 sample results.
-
-The mean percentage was calculated using:
+**Mean across samples:**
 
 ```bash
-awk 'NR>1 {sum += $2; n++} END {if (n>0) print sum/n}' percent_MAPQ30.txt
+awk 'NR>1 && $2!="NA" {sum += $2; n++} END {if(n>0) print sum/n}' percent_MAPQ30.txt
 ```
 
-**Mean percentage of reads with MAPQ ≥ 30: 96.002%**
+**Corrected mean MAPQ ≥ 30: 96.0023%**
 
-This exceeds the approximate 70% benchmark mentioned in the ezRAD workflow document.
+For sample `354_PA01`, the percentage changed from 96.96% to 97.04%.
 
-### Mapping QC summary
+The correction had a negligible effect on the overall mean but ensures the calculation is valid when MAPQ score rows are missing.
+
+**Final mapping QC summary:**
 
 | Metric | Result |
 |---|---:|
-| Number of samples | 273 |
-| Mean percentage mapped | 100.00% |
-| Mean percentage properly paired | 100.00% |
-| Mean percentage MAPQ ≥ 30 | 96.002% |
+| Samples analyzed | 273 |
+| Mean percentage mapped (filtered BAMs) | 100.00% |
+| Mean percentage properly paired (filtered BAMs) | 100.00% |
+| Mean percentage MAPQ ≥ 30 | 96.0023% |
 | Merged mapped intervals | 17,196 |
-
 ---
 
 ## 7. Mitochondrial species identification
