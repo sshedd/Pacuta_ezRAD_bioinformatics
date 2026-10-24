@@ -134,15 +134,6 @@ bcftools index -n 01_biallelic_snps.vcf.gz
 bcftools query -l 01_biallelic_snps.vcf.gz | wc -l
 ```
 
-### Results
-
-| Metric | Result |
-|---|---|
-| Input variant sites | 24,037,651 |
-| SNPs retained after initial BCFtools filtering | Pending |
-| Individuals retained | Pending verification; expected 263 |
-| Output file | `01_biallelic_snps.vcf.gz` |
-
 ## 7. Next Filtering Stage — VCFtools
 
 Following successful completion of the initial BCFtools stage, apply the following filters from the ezRAD analysis document:
@@ -151,29 +142,70 @@ Following successful completion of the initial BCFtools stage, apply the followi
 - Minimum minor allele count: `--mac 2`
 - Minimum genotype depth: `--minDP 3`
 
-The minimum genotype-depth setting will treat insufficiently covered genotype calls as missing, which will affect subsequent missingness calculations.
-
-Record the number of SNPs and individuals retained before proceeding.
-
 ## 8. Filtering Results Summary
 
-| Stage | SNPs retained | Individuals retained |
+### Table 1. SNP filtering summary
+
+| Step | Analysis | Filters applied | SNPs retained | Individuals retained | Runtime | Status |
+|---|---|---|---:|---:|---|---|
+| 0 | Raw FreeBayes variant calling | None | 24,037,651 | 263 | — | Complete |
+| 1 | Initial BCFtools filtering | Biallelic SNPs; non-reference allele count ≥1; mean genotype depth ≤2,000 | 17,907,986 | 263 | Not recorded | Complete |
+| 2 | Initial VCFtools filtering | `--minQ 20 --mac 2 --minDP 3` | 8,933,146 | 263 | 4,576 seconds (~76 min) | Complete |
+| 3 | Individual missingness assessment | `--missing-indv` (diagnostic only) | 8,933,146 | 263 | 364 seconds (~6 min) | Complete |
+| 4 | Per-site missingness assessment | `--missing-site` (diagnostic only) | 8,933,146 | 263 | 397 seconds (~7 min) | Complete |
+| 5 | Per-site mean depth assessment | `--site-mean-depth` (diagnostic only) | Pending | 263 expected | Pending | Awaiting results |
+| 6 | Additional SNP filtering | MAF, site missingness, depth and other quality criteria to be determined | Pending | 263 planned | — | Not started |
+
+**Important:** All 263 coral samples are being retained throughout SNP filtering. Individual selection will occur after PCA, species identification checks, and technical-replicate assessment.
+
+### Table 2. Individual missingness distribution
+
+Calculated using VCFtools `--missing-indv` on 8,933,146 SNPs across 263 individuals.
+
+| Individual missingness | Number of individuals | Percentage |
 |---|---:|---:|
-| Raw FreeBayes variants | 24,037,651 | 263 |
-| Initial BCFtools filters | Pending | Pending |
-| Initial VCFtools filters | Pending | Pending |
-| Additional site-level filters | Pending | Pending |
-| Heterozygosity and linkage filters | Pending | Pending |
-| Final SNP dataset for PCA | Pending | 263 planned |
+| Less than 10% | 0 | 0.0% |
+| 10–30% | 0 | 0.0% |
+| 30–50% | 5 | 1.9% |
+| 50–70% | 118 | 44.9% |
+| 70–90% | 135 | 51.3% |
+| 90% or greater | 5 | 1.9% |
+| **Total** | **263** | **100%** |
 
-## 9. Downstream Analyses
+**Interpretation:** Individual missingness was high across the dataset. A total of 253 individuals (96.2%) had at least 50% missing genotypes at this stage. This may reflect uneven SNP coverage among individuals and the effect of the minimum genotype depth filter (`--minDP 3`). No individuals were removed.
 
-After SNP filtering:
+### Table 3. SNP completeness and potential retention thresholds
 
-- Conduct PCA to evaluate genetic clustering and species identification.
-- Assess technical replicates for concordance.
-- Evaluate individual genotype missingness and sample quality.
-- Select one appropriate individual per sampling site.
-- Prepare the selected dataset for seascape genomics and genotype–environment association analyses.
+Calculated using VCFtools `--missing-site` on 8,933,146 SNPs across 263 individuals.
 
-All thresholds, commands, output filenames, and SNP counts will be documented as filtering progresses.
+| Minimum SNP genotyping rate | Equivalent maximum missingness | SNPs meeting threshold | Percentage of current SNPs |
+|---|---|---:|---:|
+| ≥95% | ≤5% | 41,854 | 0.47% |
+| ≥90% | ≤10% | 119,552 | 1.34% |
+| ≥80% | ≤20% | 613,206 | 6.86% |
+| ≥70% | ≤30% | 1,256,391 | 14.06% |
+| ≥50% | ≤50% | 2,388,252 | 26.73% |
+
+**Interpretation:** A minimum genotyping rate of 70% would retain approximately 1.26 million SNPs before further filtering. This threshold is being considered because it balances SNP retention and completeness and is comparable to the sea cucumber seascape genomics workflow.
+
+**Decision status:** No site-missingness threshold has been applied yet. The final threshold will be selected after reviewing mean SNP depth and additional quality-filtering requirements.
+
+### Table 4. Output files generated
+
+| Analysis | Output file | Purpose |
+|---|---|---|
+| Initial BCFtools filtering | `01_biallelic_snps.vcf.gz` | Biallelic SNP dataset after initial filtering |
+| Initial VCFtools filtering | `02_initial_vcftools.vcf.gz` | Dataset after quality, minor allele count and genotype depth filters |
+| Individual missingness | `03_individual_missingness.imiss` | Missing genotype proportion for each sample |
+| Site missingness | `04_site_missingness.lmiss` | Missing genotype proportion for each SNP |
+| Mean SNP depth | `04_site_mean_depth.ldepth.mean` | Mean sequencing depth for each SNP; pending confirmation |
+
+### Notes and Decisions
+
+- The original `TotalRawSNPs.vcf` was used as the starting file, rather than dDocent's automatically filtered VCF.
+- Compressed VCF outputs were used to reduce storage requirements.
+- The optional BCFtools `-g hom` filter was not applied.
+- VCF header warnings involving `TYPE`, `CIGAR`, `GQ`, and `GL` were observed during filtering. The filtering commands completed successfully.
+- Individual missingness was assessed for quality-control purposes only; no samples were excluded.
+- Sampling sites contain 1–3 coral samples, so population-level minor allele frequency filters will not be calculated using individual sites as populations.
+- PCA, species identification confirmation, technical-replicate checks, and selection of one sample per site will occur after SNP filtering.
