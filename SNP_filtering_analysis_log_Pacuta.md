@@ -144,25 +144,26 @@ Following successful completion of the initial BCFtools stage, apply the followi
 
 ## 8. Filtering Results Summary
 
-### Table 1. SNP filtering summary
+### Table 1. SNP filtering and quality-control summary
 
-| Step | Analysis | Filters applied | SNPs retained | Individuals retained | Runtime | Status |
-|---|---|---|---:|---:|---|---|
+| **Step** | **Analysis** | **Filters applied** | **SNPs retained** | **Individuals retained** | **Runtime** | **Status** |
+|---|---|---|---|---|---|---|
 | 0 | Raw FreeBayes variant calling | None | 24,037,651 | 263 | — | Complete |
 | 1 | Initial BCFtools filtering | Biallelic SNPs; non-reference allele count ≥1; mean genotype depth ≤2,000 | 17,907,986 | 263 | Not recorded | Complete |
 | 2 | Initial VCFtools filtering | `--minQ 20 --mac 2 --minDP 3` | 8,933,146 | 263 | 4,576 seconds (~76 min) | Complete |
 | 3 | Individual missingness assessment | `--missing-indv` (diagnostic only) | 8,933,146 | 263 | 364 seconds (~6 min) | Complete |
 | 4 | Per-site missingness assessment | `--missing-site` (diagnostic only) | 8,933,146 | 263 | 397 seconds (~7 min) | Complete |
-| 5 | Per-site mean depth assessment | `--site-mean-depth` (diagnostic only) | Pending | 263 expected | Pending | Awaiting results |
+| 5 | Per-site mean depth assessment | `--site-mean-depth` (diagnostic only) | 8,933,146 | 263 | 402 seconds (~7 min) | Complete |
+| 5a | Mean depth among SNPs with ≥70% completeness | Combined site-missingness and mean-depth diagnostic files; no filtering applied | 1,256,391 SNPs assessed | 263 (unchanged) | Not recorded | Complete |
 | 6 | Additional SNP filtering | MAF, site missingness, depth and other quality criteria to be determined | Pending | 263 planned | — | Not started |
 
-**Important:** All 263 coral samples are being retained throughout SNP filtering. Individual selection will occur after PCA, species identification checks, and technical-replicate assessment.
+**Important:** All 263 coral samples are being retained throughout SNP filtering. Individual selection will occur after PCA, species identification checks, and technical-replicate assessment. Diagnostic analyses do not modify the VCF or remove samples.
 
 ### Table 2. Individual missingness distribution
 
 Calculated using VCFtools `--missing-indv` on 8,933,146 SNPs across 263 individuals.
 
-| Individual missingness | Number of individuals | Percentage |
+| **Individual missingness** | **Number of individuals** | **Percentage** |
 |---|---:|---:|
 | Less than 10% | 0 | 0.0% |
 | 10–30% | 0 | 0.0% |
@@ -178,7 +179,7 @@ Calculated using VCFtools `--missing-indv` on 8,933,146 SNPs across 263 individu
 
 Calculated using VCFtools `--missing-site` on 8,933,146 SNPs across 263 individuals.
 
-| Minimum SNP genotyping rate | Equivalent maximum missingness | SNPs meeting threshold | Percentage of current SNPs |
+| **Minimum SNP genotyping rate** | **Equivalent maximum missingness** | **SNPs meeting threshold** | **Percentage of current SNPs** |
 |---|---|---:|---:|
 | ≥95% | ≤5% | 41,854 | 0.47% |
 | ≥90% | ≤10% | 119,552 | 1.34% |
@@ -188,17 +189,66 @@ Calculated using VCFtools `--missing-site` on 8,933,146 SNPs across 263 individu
 
 **Interpretation:** A minimum genotyping rate of 70% would retain approximately 1.26 million SNPs before further filtering. This threshold is being considered because it balances SNP retention and completeness and is comparable to the sea cucumber seascape genomics workflow.
 
-**Decision status:** No site-missingness threshold has been applied yet. The final threshold will be selected after reviewing mean SNP depth and additional quality-filtering requirements.
+**Decision status:** A minimum genotyping rate of 70% (`--max-missing 0.70`) is the provisional preferred threshold, supported by the mean-depth assessment below. It has **not yet been applied** to the VCF.
 
-### Table 4. Output files generated
+### Table 4. Mean SNP depth distribution
 
-| Analysis | Output file | Purpose |
+Calculated using VCFtools `--site-mean-depth` on 8,933,146 SNPs across 263 individuals.
+
+| **Mean SNP depth** | **Number of SNPs** | **Percentage of SNPs** |
+|---|---:|---:|
+| Less than 3× | 4,032,752 | 45.14% |
+| 3–5× | 2,395,442 | 26.82% |
+| 5–10× | 1,780,913 | 19.94% |
+| 10–20× | 628,454 | 7.04% |
+| 20–50× | 84,321 | 0.94% |
+| 50–100× | 9,348 | 0.10% |
+| ≥100× | 1,916 | 0.02% |
+| **Total** | **8,933,146** | **100%** |
+
+**Summary statistics:**
+
+| **Metric** | **Value** |
+|---|---:|
+| Total SNPs assessed | 8,933,146 |
+| Overall mean SNP depth | 4.753× |
+| Minimum mean SNP depth | 1.128× |
+| Maximum mean SNP depth | 1,014.75× |
+| SNPs with mean depth below 5× | 6,428,194 (71.96%) |
+
+**Interpretation:** Most SNPs had relatively low mean sequencing depth across the full dataset. Approximately 72% had a mean depth below 5×. However, low mean depth may partly reflect uneven coverage and high missingness across individuals rather than uniformly low depth at successfully genotyped sites.
+
+The initial VCFtools filtering included `--minDP 3`, which masks individual genotypes below three reads. Therefore, mean SNP depth and individual genotype depth should not be interpreted as equivalent measurements.
+
+### Table 5. Mean SNP depth among SNPs with ≥70% completeness
+
+The site-missingness and mean-depth diagnostic files were compared to assess sequencing depth among SNPs genotyped in at least 70% of the 263 individuals.
+
+This analysis was diagnostic only; no additional SNPs or individuals were removed.
+
+| **Metric** | **Result** |
+|---|---:|
+| SNPs meeting ≥70% completeness | 1,256,391 |
+| Average mean SNP depth | 12.227× |
+| SNPs with mean depth below 3× | 0 |
+| SNPs with mean depth 3–5× | 3,148 (0.25%) |
+| SNPs with mean depth ≥5× | 1,253,243 (99.75%) |
+
+**Interpretation:** SNPs meeting the provisional 70% completeness threshold had substantially higher mean depth than the full dataset (12.227× versus 4.753×). Nearly all SNPs in this subset (99.75%) had a mean depth of at least 5×.
+
+This indicates that low mean depth across the full dataset is strongly associated with SNPs having higher missingness. Restricting analyses to SNPs with greater completeness may improve the overall coverage profile without requiring an additional minimum mean-depth filter.
+
+**Filtering decision:** No additional minimum mean-depth threshold will be applied at this stage. The provisional 70% completeness threshold will be evaluated alongside minor allele frequency and other SNP-quality criteria before final filtering.
+
+### Table 6. Output files generated
+
+| **Analysis** | **Output file** | **Purpose** |
 |---|---|---|
 | Initial BCFtools filtering | `01_biallelic_snps.vcf.gz` | Biallelic SNP dataset after initial filtering |
 | Initial VCFtools filtering | `02_initial_vcftools.vcf.gz` | Dataset after quality, minor allele count and genotype depth filters |
 | Individual missingness | `03_individual_missingness.imiss` | Missing genotype proportion for each sample |
 | Site missingness | `04_site_missingness.lmiss` | Missing genotype proportion for each SNP |
-| Mean SNP depth | `04_site_mean_depth.ldepth.mean` | Mean sequencing depth for each SNP; pending confirmation |
+| Mean SNP depth | `04_site_mean_depth.ldepth.mean` | Mean sequencing depth for each SNP |
 
 ### Notes and Decisions
 
@@ -208,4 +258,8 @@ Calculated using VCFtools `--missing-site` on 8,933,146 SNPs across 263 individu
 - VCF header warnings involving `TYPE`, `CIGAR`, `GQ`, and `GL` were observed during filtering. The filtering commands completed successfully.
 - Individual missingness was assessed for quality-control purposes only; no samples were excluded.
 - Sampling sites contain 1–3 coral samples, so population-level minor allele frequency filters will not be calculated using individual sites as populations.
+- A minimum SNP genotyping rate of 70% is provisionally recommended but has not yet been applied.
+- SNPs meeting ≥70% completeness had an average mean depth of 12.227×, compared with 4.753× across all SNPs.
+- No additional minimum mean-depth filter was selected because the higher-completeness SNP subset already showed substantially improved mean depth.
+- Global MAF thresholds of 0.01 and 0.05 will be considered before additional SNP filtering.
 - PCA, species identification confirmation, technical-replicate checks, and selection of one sample per site will occur after SNP filtering.
