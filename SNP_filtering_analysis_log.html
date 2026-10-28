@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+@font-face {
+font-family: octicons-link;
+src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+body {
+-webkit-text-size-adjust: 100%;
+text-size-adjust: 100%;
+color: #333;
+font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+font-size: 16px;
+line-height: 1.6;
+word-wrap: break-word;
+}
+a {
+background-color: transparent;
+}
+a:active,
+a:hover {
+outline: 0;
+}
+strong {
+font-weight: bold;
+}
+h1 {
+font-size: 2em;
+margin: 0.67em 0;
+}
+img {
+border: 0;
+}
+hr {
+box-sizing: content-box;
+height: 0;
+}
+pre {
+overflow: auto;
+}
+code,
+kbd,
+pre {
+font-family: monospace, monospace;
+font-size: 1em;
+}
+input {
+color: inherit;
+font: inherit;
+margin: 0;
+}
+html input[disabled] {
+cursor: default;
+}
+input {
+line-height: normal;
+}
+input[type="checkbox"] {
+box-sizing: border-box;
+padding: 0;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+td,
+th {
+padding: 0;
+}
+* {
+box-sizing: border-box;
+}
+input {
+font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+a {
+color: #4078c0;
+text-decoration: none;
+}
+a:hover,
+a:active {
+text-decoration: underline;
+}
+hr {
+height: 0;
+margin: 15px 0;
+overflow: hidden;
+background: transparent;
+border: 0;
+border-bottom: 1px solid #ddd;
+}
+hr:before {
+display: table;
+content: "";
+}
+hr:after {
+display: table;
+clear: both;
+content: "";
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 15px;
+margin-bottom: 15px;
+line-height: 1.1;
+}
+h1 {
+font-size: 30px;
+}
+h2 {
+font-size: 21px;
+}
+h3 {
+font-size: 16px;
+}
+h4 {
+font-size: 14px;
+}
+h5 {
+font-size: 12px;
+}
+h6 {
+font-size: 11px;
+}
+blockquote {
+margin: 0;
+}
+ul,
+ol {
+padding: 0;
+margin-top: 0;
+margin-bottom: 0;
+}
+ol ol,
+ul ol {
+list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+list-style-type: lower-alpha;
+}
+dd {
+margin-left: 0;
+}
+code {
+font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+font-size: 12px;
+}
+pre {
+margin-top: 0;
+margin-bottom: 0;
+font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+.select::-ms-expand {
+opacity: 0;
+}
+.octicon {
+font: normal normal normal 16px/1 octicons-link;
+display: inline-block;
+text-decoration: none;
+text-rendering: auto;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.octicon-link:before {
+content: '\f05c';
+}
+.markdown-body:before {
+display: table;
+content: "";
+}
+.markdown-body:after {
+display: table;
+clear: both;
+content: "";
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.markdown-body>*:last-child {
+margin-bottom: 0 !important;
+}
+a:not([href]) {
+color: inherit;
+text-decoration: none;
+}
+.anchor {
+display: inline-block;
+padding-right: 2px;
+margin-left: -18px;
+}
+.anchor:focus {
+outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 1em;
+margin-bottom: 16px;
+font-weight: bold;
+line-height: 1.4;
+}
+h1 .octicon-link,
+h2 .octicon-link,
+h3 .octicon-link,
+h4 .octicon-link,
+h5 .octicon-link,
+h6 .octicon-link {
+color: #000;
+vertical-align: middle;
+visibility: hidden;
+}
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+text-decoration: none;
+}
+h1:hover .anchor .octicon-link,
+h2:hover .anchor .octicon-link,
+h3:hover .anchor .octicon-link,
+h4:hover .anchor .octicon-link,
+h5:hover .anchor .octicon-link,
+h6:hover .anchor .octicon-link {
+visibility: visible;
+}
+h1 {
+padding-bottom: 0.3em;
+font-size: 2.25em;
+line-height: 1.2;
+border-bottom: 1px solid #eee;
+}
+h1 .anchor {
+line-height: 1;
+}
+h2 {
+padding-bottom: 0.3em;
+font-size: 1.75em;
+line-height: 1.225;
+border-bottom: 1px solid #eee;
+}
+h2 .anchor {
+line-height: 1;
+}
+h3 {
+font-size: 1.5em;
+line-height: 1.43;
+}
+h3 .anchor {
+line-height: 1.2;
+}
+h4 {
+font-size: 1.25em;
+}
+h4 .anchor {
+line-height: 1.2;
+}
+h5 {
+font-size: 1em;
+}
+h5 .anchor {
+line-height: 1.1;
+}
+h6 {
+font-size: 1em;
+color: #777;
+}
+h6 .anchor {
+line-height: 1.1;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table,
+pre {
+margin-top: 0;
+margin-bottom: 16px;
+}
+hr {
+height: 4px;
+padding: 0;
+margin: 16px 0;
+background-color: #e7e7e7;
+border: 0 none;
+}
+ul,
+ol {
+padding-left: 2em;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+margin-top: 0;
+margin-bottom: 0;
+}
+li>p {
+margin-top: 16px;
+}
+dl {
+padding: 0;
+}
+dl dt {
+padding: 0;
+margin-top: 16px;
+font-size: 1em;
+font-style: italic;
+font-weight: bold;
+}
+dl dd {
+padding: 0 16px;
+margin-bottom: 16px;
+}
+blockquote {
+padding: 0 15px;
+color: #777;
+border-left: 4px solid #ddd;
+}
+blockquote>:first-child {
+margin-top: 0;
+}
+blockquote>:last-child {
+margin-bottom: 0;
+}
+table {
+display: block;
+width: 100%;
+overflow: auto;
+word-break: normal;
+word-break: keep-all;
+}
+table th {
+font-weight: bold;
+}
+table th,
+table td {
+padding: 6px 13px;
+border: 1px solid #ddd;
+}
+table tr {
+background-color: #fff;
+border-top: 1px solid #ccc;
+}
+table tr:nth-child(2n) {
+background-color: #f8f8f8;
+}
+img {
+max-width: 100%;
+box-sizing: content-box;
+background-color: #fff;
+}
+code {
+padding: 0;
+padding-top: 0.2em;
+padding-bottom: 0.2em;
+margin: 0;
+font-size: 85%;
+background-color: rgba(0,0,0,0.04);
+border-radius: 3px;
+}
+code:before,
+code:after {
+letter-spacing: -0.2em;
+content: "\00a0";
+}
+pre>code {
+padding: 0;
+margin: 0;
+font-size: 100%;
+word-break: normal;
+white-space: pre;
+background: transparent;
+border: 0;
+}
+.highlight {
+margin-bottom: 16px;
+}
+.highlight pre,
+pre {
+padding: 16px;
+overflow: auto;
+font-size: 85%;
+line-height: 1.45;
+background-color: #f7f7f7;
+border-radius: 3px;
+}
+.highlight pre {
+margin-bottom: 0;
+word-break: normal;
+}
+pre {
+word-wrap: normal;
+}
+pre code {
+display: inline;
+max-width: initial;
+padding: 0;
+margin: 0;
+overflow: initial;
+line-height: inherit;
+word-wrap: normal;
+background-color: transparent;
+border: 0;
+}
+pre code:before,
+pre code:after {
+content: normal;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font-size: 11px;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.pl-c {
+color: #969896;
+}
+.pl-c1,
+.pl-s .pl-v {
+color: #0086b3;
+}
+.pl-e,
+.pl-en {
+color: #795da3;
+}
+.pl-s .pl-s1,
+.pl-smi {
+color: #333;
+}
+.pl-ent {
+color: #63a35c;
+}
+.pl-k {
+color: #a71d5d;
+}
+.pl-pds,
+.pl-s,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sra,
+.pl-sr .pl-sre {
+color: #183691;
+}
+.pl-v {
+color: #ed6a43;
+}
+.pl-id {
+color: #b52a1d;
+}
+.pl-ii {
+background-color: #b52a1d;
+color: #f8f8f8;
+}
+.pl-sr .pl-cce {
+color: #63a35c;
+font-weight: bold;
+}
+.pl-ml {
+color: #693a17;
+}
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+color: #1d3e81;
+font-weight: bold;
+}
+.pl-mq {
+color: #008080;
+}
+.pl-mi {
+color: #333;
+font-style: italic;
+}
+.pl-mb {
+color: #333;
+font-weight: bold;
+}
+.pl-md {
+background-color: #ffecec;
+color: #bd2c00;
+}
+.pl-mi1 {
+background-color: #eaffea;
+color: #55a532;
+}
+.pl-mdr {
+color: #795da3;
+font-weight: bold;
+}
+.pl-mo {
+color: #1d3e81;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.task-list-item {
+list-style-type: none;
+}
+.task-list-item+.task-list-item {
+margin-top: 3px;
+}
+.task-list-item input {
+margin: 0 0.35em 0.25em -1.6em;
+vertical-align: middle;
+}
+:checked+.radio-label {
+z-index: 1;
+position: relative;
+border-color: #4078c0;
+}
+.sourceLine {
+display: inline-block;
+}
+code .kw { color: #000000; }
+code .dt { color: #ed6a43; }
+code .dv { color: #009999; }
+code .bn { color: #009999; }
+code .fl { color: #009999; }
+code .ch { color: #009999; }
+code .st { color: #183691; }
+code .co { color: #969896; }
+code .ot { color: #0086b3; }
+code .al { color: #a61717; }
+code .fu { color: #63a35c; }
+code .er { color: #a61717; background-color: #e3d2d2; }
+code .wa { color: #000000; }
+code .cn { color: #008080; }
+code .sc { color: #008080; }
+code .vs { color: #183691; }
+code .ss { color: #183691; }
+code .im { color: #000000; }
+code .va {color: #008080; }
+code .cf { color: #000000; }
+code .op { color: #000000; }
+code .bu { color: #000000; }
+code .ex { color: #000000; }
+code .pp { color: #999999; }
+code .at { color: #008080; }
+code .do { color: #969896; }
+code .an { color: #008080; }
+code .cv { color: #008080; }
+code .in { color: #008080; }
+</style>
+<style>
+body {
+box-sizing: border-box;
+min-width: 200px;
+max-width: 980px;
+margin: 0 auto;
+padding: 45px;
+padding-top: 0px;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="snp-filtering-analysis-log">SNP Filtering Analysis Log</h1>
+<p>2026-10-27</p>
+<ul>
+<li><a href="#snp-filtering-analysis-log">SNP Filtering Analysis Log</a>
+<ul>
+<li><a href="#project-pocillopora-acuta-ezrad-seascape-genomics">Project:
+<em>Pocillopora acuta</em> ezRAD Seascape Genomics</a></li>
+<li><a href="#id_1-objective">1. Objective</a></li>
+<li><a href="#id_2-starting-dataset">2. Starting Dataset</a></li>
+<li><a href="#id_3-software">3. Software</a></li>
+<li><a href="#id_4-working-directory">4. Working Directory</a></li>
+<li><a href="#id_5-filtering-strategy">5. Filtering Strategy</a></li>
+<li><a href="#id_6-initial-snp-filtering--bcftools">6. Initial SNP
+Filtering — BCFtools</a>
+<ul>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#command">Command</a></li>
+<li><a href="#verification-commands">Verification commands</a></li>
+</ul></li>
+<li><a href="#id_7-next-filtering-stage--vcftools">7. Next Filtering
+Stage — VCFtools</a></li>
+<li><a href="#id_8-filtering-results-summary">8. Filtering Results
+Summary</a>
+<ul>
+<li><a href="#table-1-snp-filtering-and-quality-control-summary">Table
+1. SNP filtering and quality-control summary</a></li>
+<li><a href="#table-2-individual-missingness-distribution">Table 2.
+Individual missingness distribution</a></li>
+<li><a href="#table-3-snp-completeness-and-potential-retention-thresholds">Table
+3. SNP completeness and potential retention thresholds</a></li>
+<li><a href="#table-4-mean-snp-depth-distribution">Table 4. Mean SNP
+depth distribution</a></li>
+<li><a href="#table-5-mean-snp-depth-among-snps-with-70-completeness">Table 5.
+Mean SNP depth among SNPs with ≥70% completeness</a></li>
+<li><a href="#table-6-output-files-generated">Table 6. Output files
+generated</a></li>
+</ul></li>
+<li><a href="#id_9-additional-mean-depth-assessment">9. Additional
+Mean-Depth Assessment</a>
+<ul>
+<li><a href="#id_91-purpose">9.1 Purpose</a></li>
+<li><a href="#table-7-upper-depth-tail-among-snps-with-70-completeness">Table
+7. Upper-depth tail among SNPs with ≥70% completeness</a></li>
+</ul></li>
+<li><a href="#id_10-freebayes-mapping-quality-assessment">10. FreeBayes
+Mapping-Quality Assessment</a>
+<ul>
+<li><a href="#id_101-purpose">10.1 Purpose</a></li>
+<li><a href="#id_102-mapping-quality-across-all-initially-filtered-snps">10.2
+Mapping quality across all initially filtered SNPs</a></li>
+<li><a href="#table-8-alternate-allele-mapping-quality-across-all-snps">Table
+8. Alternate-allele mapping quality across all SNPs</a></li>
+<li><a href="#id_103-mapping-quality-among-snps-with-70-completeness">10.3
+Mapping quality among SNPs with ≥70% completeness</a></li>
+<li><a href="#table-9-alternate-allele-mapping-quality-among-higher-completeness-snps">Table
+9. Alternate-allele mapping quality among higher-completeness
+SNPs</a></li>
+<li><a href="#id_104-comparing-reference-and-alternate-mapping-quality">10.4
+Comparing reference and alternate mapping quality</a></li>
+<li><a href="#table-10-snp-retention-under-alternative-mapping-quality-thresholds">Table
+10. SNP retention under alternative mapping-quality thresholds</a></li>
+<li><a href="#id_105-mapping-quality-filtering-decision">10.5
+Mapping-quality filtering decision</a></li>
+</ul></li>
+<li><a href="#id_11-allele-balance-assessment">11. Allele-Balance
+Assessment</a>
+<ul>
+<li><a href="#id_111-purpose">11.1 Purpose</a></li>
+<li><a href="#id_112-allele-balance-distribution">11.2 Allele-balance
+distribution</a></li>
+<li><a href="#table-11-freebayes-allele-balance-distribution">Table 11.
+FreeBayes allele-balance distribution</a></li>
+<li><a href="#id_113-investigating-snps-with-very-low-allele-balance">11.3
+Investigating SNPs with very low allele balance</a></li>
+<li><a href="#table-12-heterozygous-genotype-counts-among-snps-with-ab-01">Table
+12. Heterozygous genotype counts among SNPs with AB &lt;0.1</a></li>
+<li><a href="#id_114-allele-balance-filtering-decision">11.4
+Allele-balance filtering decision</a></li>
+</ul></li>
+<li><a href="#id_12-properly-paired-read-assessment">12. Properly Paired
+Read Assessment</a>
+<ul>
+<li><a href="#id_121-purpose">12.1 Purpose</a></li>
+<li><a href="#id_122-results">12.2 Results</a></li>
+<li><a href="#table-13-properly-paired-read-support">Table 13. Properly
+paired read support</a></li>
+<li><a href="#id_123-paired-read-filtering-decision">12.3 Paired-read
+filtering decision</a></li>
+</ul></li>
+<li><a href="#id_13-combined-candidate-filter-assessment">13. Combined
+Candidate-Filter Assessment</a>
+<ul>
+<li><a href="#id_131-purpose">13.1 Purpose</a></li>
+<li><a href="#table-14-combined-projected-snp-retention">Table 14.
+Combined projected SNP retention</a></li>
+<li><a href="#id_132-visualizing-the-combined-filtering-results">13.2
+Visualizing the combined filtering results</a></li>
+<li><a href="#id_133-candidate-filtering-decision">13.3 Candidate
+filtering decision</a></li>
+</ul></li>
+<li><a href="#id_14-additional-visual-summaries">14. Additional Visual
+Summaries</a>
+<ul>
+<li><a href="#figure-6-individual-missingness-across-all-263-samples">Figure 6.
+Individual missingness across all 263 samples</a></li>
+<li><a href="#figure-7-snp-retention-by-minimum-sample-completeness">Figure 7.
+SNP retention by minimum sample completeness</a></li>
+</ul></li>
+<li><a href="#id_15-updated-snp-filtering-decision-summary">15. Updated
+SNP Filtering Decision Summary</a></li>
+<li><a href="#id_16-reproducibility-notes">16. Reproducibility
+Notes</a></li>
+<li><a href="#id_17-next-planned-analyses">17. Next Planned
+Analyses</a></li>
+</ul></li>
+</ul>
+<h1 id="snp-filtering-analysis-log-1">SNP Filtering Analysis Log</h1>
+<h2 id="project-pocillopora-acuta-ezrad-seascape-genomics">Project:
+<em>Pocillopora acuta</em> ezRAD Seascape Genomics</h2>
+<p><strong>Started:</strong> October 22, 2026<br />
+<strong>Status:</strong> Initial SNP filtering planned / in
+progress<br />
+<strong>Repository:</strong> <a href="https://github.com/sshedd/Pacuta_ezRAD_bioinformatics">Pacuta_ezRAD_bioinformatics</a></p>
+<hr />
+<h2 id="id_1-objective">1. Objective</h2>
+<p>Filter raw SNPs generated by dDocent and FreeBayes to produce a
+high-quality nuclear SNP dataset suitable for population genetic
+analyses, species identification, technical-replicate assessment,
+principal component analysis (PCA), and subsequent seascape
+genomics.</p>
+<p>All 263 individuals will be retained during SNP filtering.</p>
+<p>After SNP filtering, PCA and technical-replicate comparisons will be
+used to evaluate species identification and sample quality. One suitable
+individual per sampling site will subsequently be selected for
+downstream seascape genomics analyses.</p>
+<h2 id="id_2-starting-dataset">2. Starting Dataset</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organism</td>
+<td><em>Pocillopora</em> spp., primarily <em>P. acuta</em></td>
+</tr>
+<tr>
+<td>Reference genome</td>
+<td><em>Pocillopora acuta</em> HIv1</td>
+</tr>
+<tr>
+<td>SNP caller</td>
+<td>FreeBayes through dDocent v2.9.8</td>
+</tr>
+<tr>
+<td>Number of individuals</td>
+<td>263</td>
+</tr>
+<tr>
+<td>Raw variant sites</td>
+<td>24,037,651</td>
+</tr>
+<tr>
+<td>Input VCF</td>
+<td><code>TotalRawSNPs.vcf</code></td>
+</tr>
+<tr>
+<td>Input VCF size</td>
+<td>Approximately 221 GB</td>
+</tr>
+<tr>
+<td>SNP-calling completion</td>
+<td>October 21, 2026</td>
+</tr>
+</tbody>
+</table>
+<p>The input for filtering is the original
+<code>TotalRawSNPs.vcf</code>, rather than dDocent’s automatically
+filtered <code>Final.recode.vcf</code>.</p>
+<h2 id="id_3-software">3. Software</h2>
+<p>All analyses are performed in the <code>ezRAD_env</code> conda
+environment.</p>
+<table>
+<thead>
+<tr>
+<th>Software</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VCFtools</td>
+<td>0.1.17</td>
+</tr>
+<tr>
+<td>BCFtools</td>
+<td>1.23.1</td>
+</tr>
+<tr>
+<td>vcflib (<code>vcffilter</code>)</td>
+<td>Installed; version not yet recorded</td>
+</tr>
+</tbody>
+</table>
+<h2 id="id_4-working-directory">4. Working Directory</h2>
+<p>Original dDocent output:</p>
+<pre class="text"><code>/home/sshedd/working/pacuta/dDocent_min_tlen_fixmate_Pacuta/</code></pre>
+<p>SNP-filtering subdirectory:</p>
+<pre class="text"><code>/home/sshedd/working/pacuta/dDocent_min_tlen_fixmate_Pacuta/SNP_filtering/</code></pre>
+<p>The original raw VCF will be preserved. Filtering outputs will be
+stored separately and named according to the filtering stage.</p>
+<p>Available storage checked before filtering:</p>
+<pre class="text"><code>Filesystem: /dev/sda1
+Total:      1.5 TB
+Available:  1.3 TB
+Usage:      7%</code></pre>
+<h2 id="id_5-filtering-strategy">5. Filtering Strategy</h2>
+<p>The primary filtering workflow follows the supplied ezRAD analysis
+guidelines, with additional consideration of filtering criteria used in
+a published sea cucumber seascape genomics study.</p>
+<p>Planned filtering stages:</p>
+<ol style="list-style-type: decimal">
+<li>Initial technical filtering: biallelic SNPs, variant type, allele
+count, depth, and variant quality.</li>
+<li>Examine individual missingness without removing samples.</li>
+<li>Examine per-site missingness and mean sequencing depth.</li>
+<li>Apply additional SNP-level quality filters, including allele
+frequency and read-support criteria.</li>
+<li>Evaluate heterozygosity and potentially problematic loci.</li>
+<li>Reduce linked or closely spaced SNPs where appropriate.</li>
+<li>Produce a filtered dataset for PCA, species identification, and
+technical-replicate assessment.</li>
+</ol>
+<p><strong>No individuals will be removed during the initial
+SNP-filtering workflow.</strong></p>
+<p>Because sampling sites contain only 1–3 individuals, population-level
+MAF filters will not be applied using individual sampling sites as
+populations.</p>
+<p>Thresholds for site missingness, MAF, heterozygosity, and linkage
+will be evaluated using the dataset and documented before
+application.</p>
+<h2 id="id_6-initial-snp-filtering--bcftools">6. Initial SNP Filtering —
+BCFtools</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Apply the initial SNP filters recommended in the ezRAD analysis
+document while retaining all 263 individuals.</p>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Setting</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maximum alleles</td>
+<td>2</td>
+<td>Retain biallelic variants</td>
+</tr>
+<tr>
+<td>Variant type</td>
+<td>SNPs</td>
+<td>Exclude indels</td>
+</tr>
+<tr>
+<td>Minimum non-reference allele count</td>
+<td>1</td>
+<td>Exclude invariant reference sites</td>
+</tr>
+<tr>
+<td>Maximum mean genotype depth</td>
+<td>2,000</td>
+<td>Remove extremely high-depth sites</td>
+</tr>
+<tr>
+<td>Require homozygous genotype</td>
+<td>Not applied</td>
+<td>Retain all-heterozygous sites for later evaluation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="command">Command</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">conda</span> activate ezRAD_env</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="bu">cd</span> ~/working/pacuta/dDocent_min_tlen_fixmate_Pacuta</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> SNP_filtering</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="bu">cd</span> SNP_filtering</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="ex">bcftools</span> view <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="at">-v</span> snps <span class="dt">\</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="at">-c</span> 1:nref <span class="dt">\</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    <span class="at">-i</span> <span class="st">&#39;MEAN(FORMAT/DP)&lt;=2000&#39;</span> <span class="dt">\</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    ../TotalRawSNPs.vcf <span class="dt">\</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="at">-Oz</span> <span class="dt">\</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    <span class="at">-o</span> 01_biallelic_snps.vcf.gz</span></code></pre></div>
+<p>Compressed VCF output is used to reduce storage requirements.</p>
+<h3 id="verification-commands">Verification commands</h3>
+<p>Run only after the filtering command completes successfully:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">bcftools</span> index <span class="at">-t</span> 01_biallelic_snps.vcf.gz</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="ex">bcftools</span> index <span class="at">-n</span> 01_biallelic_snps.vcf.gz</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="ex">bcftools</span> query <span class="at">-l</span> 01_biallelic_snps.vcf.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code></pre></div>
+<h2 id="id_7-next-filtering-stage--vcftools">7. Next Filtering Stage —
+VCFtools</h2>
+<p>Following successful completion of the initial BCFtools stage, apply
+the following filters from the ezRAD analysis document:</p>
+<ul>
+<li>Minimum variant quality: <code>--minQ 20</code></li>
+<li>Minimum minor allele count: <code>--mac 2</code></li>
+<li>Minimum genotype depth: <code>--minDP 3</code></li>
+</ul>
+<h2 id="id_8-filtering-results-summary">8. Filtering Results
+Summary</h2>
+<h3 id="table-1-snp-filtering-and-quality-control-summary">Table 1. SNP
+filtering and quality-control summary</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Step</strong></th>
+<th><strong>Analysis</strong></th>
+<th><strong>Filters applied</strong></th>
+<th><strong>SNPs retained</strong></th>
+<th><strong>Individuals retained</strong></th>
+<th><strong>Runtime</strong></th>
+<th><strong>Status</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Raw FreeBayes variant calling</td>
+<td>None</td>
+<td>24,037,651</td>
+<td>263</td>
+<td>—</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Initial BCFtools filtering</td>
+<td>Biallelic SNPs; non-reference allele count ≥1; mean genotype depth
+≤2,000</td>
+<td>17,907,986</td>
+<td>263</td>
+<td>Not recorded</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Initial VCFtools filtering</td>
+<td><code>--minQ 20 --mac 2 --minDP 3</code></td>
+<td>8,933,146</td>
+<td>263</td>
+<td>4,576 seconds (~76 min)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Individual missingness assessment</td>
+<td><code>--missing-indv</code> (diagnostic only)</td>
+<td>8,933,146</td>
+<td>263</td>
+<td>364 seconds (~6 min)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Per-site missingness assessment</td>
+<td><code>--missing-site</code> (diagnostic only)</td>
+<td>8,933,146</td>
+<td>263</td>
+<td>397 seconds (~7 min)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Per-site mean depth assessment</td>
+<td><code>--site-mean-depth</code> (diagnostic only)</td>
+<td>8,933,146</td>
+<td>263</td>
+<td>402 seconds (~7 min)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>5a</td>
+<td>Mean depth among SNPs with ≥70% completeness</td>
+<td>Combined site-missingness and mean-depth diagnostic files; no
+filtering applied</td>
+<td>1,256,391 SNPs assessed</td>
+<td>263 (unchanged)</td>
+<td>Not recorded</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Additional SNP filtering</td>
+<td>MAF, site missingness, depth and other quality criteria to be
+determined</td>
+<td>Pending</td>
+<td>263 planned</td>
+<td>—</td>
+<td>Not started</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important:</strong> All 263 coral samples are being retained
+throughout SNP filtering. Individual selection will occur after PCA,
+species identification checks, and technical-replicate assessment.
+Diagnostic analyses do not modify the VCF or remove samples.</p>
+<h3 id="table-2-individual-missingness-distribution">Table 2. Individual
+missingness distribution</h3>
+<p>Calculated using VCFtools <code>--missing-indv</code> on 8,933,146
+SNPs across 263 individuals.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Individual missingness</strong></th>
+<th align="right"><strong>Number of individuals</strong></th>
+<th align="right"><strong>Percentage</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Less than 10%</td>
+<td align="right">0</td>
+<td align="right">0.0%</td>
+</tr>
+<tr>
+<td>10–30%</td>
+<td align="right">0</td>
+<td align="right">0.0%</td>
+</tr>
+<tr>
+<td>30–50%</td>
+<td align="right">5</td>
+<td align="right">1.9%</td>
+</tr>
+<tr>
+<td>50–70%</td>
+<td align="right">118</td>
+<td align="right">44.9%</td>
+</tr>
+<tr>
+<td>70–90%</td>
+<td align="right">135</td>
+<td align="right">51.3%</td>
+</tr>
+<tr>
+<td>90% or greater</td>
+<td align="right">5</td>
+<td align="right">1.9%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>263</strong></td>
+<td align="right"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p><strong>Interpretation:</strong> Individual missingness was high
+across the dataset. A total of 253 individuals (96.2%) had at least 50%
+missing genotypes at this stage. This may reflect uneven SNP coverage
+among individuals and the effect of the minimum genotype depth filter
+(<code>--minDP 3</code>). No individuals were removed.</p>
+<h3 id="table-3-snp-completeness-and-potential-retention-thresholds">Table
+3. SNP completeness and potential retention thresholds</h3>
+<p>Calculated using VCFtools <code>--missing-site</code> on 8,933,146
+SNPs across 263 individuals.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Minimum SNP genotyping rate</strong></th>
+<th><strong>Equivalent maximum missingness</strong></th>
+<th align="right"><strong>SNPs meeting threshold</strong></th>
+<th align="right"><strong>Percentage of current SNPs</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥95%</td>
+<td>≤5%</td>
+<td align="right">41,854</td>
+<td align="right">0.47%</td>
+</tr>
+<tr>
+<td>≥90%</td>
+<td>≤10%</td>
+<td align="right">119,552</td>
+<td align="right">1.34%</td>
+</tr>
+<tr>
+<td>≥80%</td>
+<td>≤20%</td>
+<td align="right">613,206</td>
+<td align="right">6.86%</td>
+</tr>
+<tr>
+<td>≥70%</td>
+<td>≤30%</td>
+<td align="right">1,256,391</td>
+<td align="right">14.06%</td>
+</tr>
+<tr>
+<td>≥50%</td>
+<td>≤50%</td>
+<td align="right">2,388,252</td>
+<td align="right">26.73%</td>
+</tr>
+</tbody>
+</table>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p><strong>Interpretation:</strong> A minimum genotyping rate of 70%
+would retain approximately 1.26 million SNPs before further filtering.
+This threshold is being considered because it balances SNP retention and
+completeness and is comparable to the sea cucumber seascape genomics
+workflow.</p>
+<p><strong>Decision status:</strong> A minimum genotyping rate of 70%
+(<code>--max-missing 0.70</code>) is the provisional preferred
+threshold, supported by the mean-depth assessment below. It has
+<strong>not yet been applied</strong> to the VCF.</p>
+<h3 id="table-4-mean-snp-depth-distribution">Table 4. Mean SNP depth
+distribution</h3>
+<p>Calculated using VCFtools <code>--site-mean-depth</code> on 8,933,146
+SNPs across 263 individuals.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Mean SNP depth</strong></th>
+<th align="right"><strong>Number of SNPs</strong></th>
+<th align="right"><strong>Percentage of SNPs</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Less than 3×</td>
+<td align="right">4,032,752</td>
+<td align="right">45.14%</td>
+</tr>
+<tr>
+<td>3–5×</td>
+<td align="right">2,395,442</td>
+<td align="right">26.82%</td>
+</tr>
+<tr>
+<td>5–10×</td>
+<td align="right">1,780,913</td>
+<td align="right">19.94%</td>
+</tr>
+<tr>
+<td>10–20×</td>
+<td align="right">628,454</td>
+<td align="right">7.04%</td>
+</tr>
+<tr>
+<td>20–50×</td>
+<td align="right">84,321</td>
+<td align="right">0.94%</td>
+</tr>
+<tr>
+<td>50–100×</td>
+<td align="right">9,348</td>
+<td align="right">0.10%</td>
+</tr>
+<tr>
+<td>≥100×</td>
+<td align="right">1,916</td>
+<td align="right">0.02%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>8,933,146</strong></td>
+<td align="right"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summary statistics:</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th align="right"><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total SNPs assessed</td>
+<td align="right">8,933,146</td>
+</tr>
+<tr>
+<td>Overall mean SNP depth</td>
+<td align="right">4.753×</td>
+</tr>
+<tr>
+<td>Minimum mean SNP depth</td>
+<td align="right">1.128×</td>
+</tr>
+<tr>
+<td>Maximum mean SNP depth</td>
+<td align="right">1,014.75×</td>
+</tr>
+<tr>
+<td>SNPs with mean depth below 5×</td>
+<td align="right">6,428,194 (71.96%)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> Most SNPs had relatively low mean
+sequencing depth across the full dataset. Approximately 72% had a mean
+depth below 5×. However, low mean depth may partly reflect uneven
+coverage and high missingness across individuals rather than uniformly
+low depth at successfully genotyped sites.</p>
+<p>The initial VCFtools filtering included <code>--minDP 3</code>, which
+masks individual genotypes below three reads. Therefore, mean SNP depth
+and individual genotype depth should not be interpreted as equivalent
+measurements.</p>
+<h3 id="table-5-mean-snp-depth-among-snps-with-70-completeness">Table 5.
+Mean SNP depth among SNPs with ≥70% completeness</h3>
+<p>The site-missingness and mean-depth diagnostic files were compared to
+assess sequencing depth among SNPs genotyped in at least 70% of the 263
+individuals.</p>
+<p>This analysis was diagnostic only; no additional SNPs or individuals
+were removed.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th align="right"><strong>Result</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNPs meeting ≥70% completeness</td>
+<td align="right">1,256,391</td>
+</tr>
+<tr>
+<td>Average mean SNP depth</td>
+<td align="right">12.227×</td>
+</tr>
+<tr>
+<td>SNPs with mean depth below 3×</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>SNPs with mean depth 3–5×</td>
+<td align="right">3,148 (0.25%)</td>
+</tr>
+<tr>
+<td>SNPs with mean depth ≥5×</td>
+<td align="right">1,253,243 (99.75%)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> SNPs meeting the provisional 70%
+completeness threshold had substantially higher mean depth than the full
+dataset (12.227× versus 4.753×). Nearly all SNPs in this subset (99.75%)
+had a mean depth of at least 5×.</p>
+<p>This indicates that low mean depth across the full dataset is
+strongly associated with SNPs having higher missingness. Restricting
+analyses to SNPs with greater completeness may improve the overall
+coverage profile without requiring an additional minimum mean-depth
+filter.</p>
+<p><strong>Filtering decision:</strong> No additional minimum mean-depth
+threshold will be applied at this stage. The provisional 70%
+completeness threshold will be evaluated alongside minor allele
+frequency and other SNP-quality criteria before final filtering.</p>
+<h3 id="table-6-output-files-generated">Table 6. Output files
+generated</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Analysis</strong></th>
+<th><strong>Output file</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial BCFtools filtering</td>
+<td><code>01_biallelic_snps.vcf.gz</code></td>
+<td>Biallelic SNP dataset after initial filtering</td>
+</tr>
+<tr>
+<td>Initial VCFtools filtering</td>
+<td><code>02_initial_vcftools.vcf.gz</code></td>
+<td>Dataset after quality, minor allele count and genotype depth
+filters</td>
+</tr>
+<tr>
+<td>Individual missingness</td>
+<td><code>03_individual_missingness.imiss</code></td>
+<td>Missing genotype proportion for each sample</td>
+</tr>
+<tr>
+<td>Site missingness</td>
+<td><code>04_site_missingness.lmiss</code></td>
+<td>Missing genotype proportion for each SNP</td>
+</tr>
+<tr>
+<td>Mean SNP depth</td>
+<td><code>04_site_mean_depth.ldepth.mean</code></td>
+<td>Mean sequencing depth for each SNP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="id_9-additional-mean-depth-assessment">9. Additional Mean-Depth
+Assessment</h2>
+<h3 id="id_91-purpose">9.1 Purpose</h3>
+<p>The initial mean-depth assessment showed that SNPs with at least 70%
+sample completeness generally had higher mean sequencing depth than the
+full SNP dataset.</p>
+<p>We therefore examined the upper tail of the mean-depth distribution
+to determine whether unusually high-depth SNPs should be excluded.</p>
+<p>Very high sequencing depth can sometimes indicate repetitive genomic
+regions, duplicated sequences, or reads from multiple genomic locations
+mapping to the same reference position. However, high depth alone does
+not establish that a SNP is erroneous.</p>
+<h3 id="table-7-upper-depth-tail-among-snps-with-70-completeness">Table
+7. Upper-depth tail among SNPs with ≥70% completeness</h3>
+<table>
+<thead>
+<tr>
+<th>Mean SNP depth</th>
+<th align="right">Number of SNPs above threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;50×</td>
+<td align="right">11,109</td>
+</tr>
+<tr>
+<td>&gt;75×</td>
+<td align="right">4,091</td>
+</tr>
+<tr>
+<td>&gt;100×</td>
+<td align="right">1,884</td>
+</tr>
+<tr>
+<td>&gt;150×</td>
+<td align="right">541</td>
+</tr>
+<tr>
+<td>&gt;200×</td>
+<td align="right">167</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> Only 1,884 of the 1,256,391 SNPs
+meeting the provisional 70% completeness threshold had mean depth
+greater than 100×, representing approximately 0.15% of these SNPs.</p>
+<p><strong>Provisional filtering decision:</strong> Consider applying a
+maximum mean-depth threshold of 100×.</p>
+<p><strong>Reasoning:</strong></p>
+<ul>
+<li>Unusually high-depth SNPs may represent duplicated or repetitive
+genomic regions.</li>
+<li>The proposed threshold would remove only a small proportion of SNPs
+meeting the completeness requirement.</li>
+<li>A maximum-depth filter may reduce potentially problematic loci
+without substantially reducing the available SNP dataset.</li>
+<li>The 100× threshold is a pragmatic quality-control choice rather than
+a demonstrated biological boundary.</li>
+</ul>
+<p>No additional minimum mean-depth threshold is proposed because the
+≥70% completeness subset already has substantially improved mean
+depth.</p>
+<p><strong>Status:</strong> Diagnostic complete. Maximum mean-depth
+filter not yet applied.</p>
+<h2 id="id_10-freebayes-mapping-quality-assessment">10. FreeBayes
+Mapping-Quality Assessment</h2>
+<h3 id="id_101-purpose">10.1 Purpose</h3>
+<p>Mapping quality indicates how confidently sequencing reads align to
+the reference genome.</p>
+<p>Two FreeBayes INFO annotations were examined:</p>
+<ul>
+<li><code>MQM</code>: Mean mapping quality of reads supporting the
+alternate allele.</li>
+<li><code>MQMR</code>: Mean mapping quality of reads supporting the
+reference allele.</li>
+</ul>
+<p>Examining both metrics is important because reads supporting the
+reference and alternate alleles may differ in mapping confidence.</p>
+<h3 id="id_102-mapping-quality-across-all-initially-filtered-snps">10.2
+Mapping quality across all initially filtered SNPs</h3>
+<p>The distribution of <code>MQM</code> was examined across all
+8,933,146 SNPs in <code>02_initial_vcftools.vcf.gz</code>.</p>
+<h3 id="table-8-alternate-allele-mapping-quality-across-all-snps">Table
+8. Alternate-allele mapping quality across all SNPs</h3>
+<table>
+<thead>
+<tr>
+<th>MQM range</th>
+<th align="right">Number of SNPs</th>
+<th align="right">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;20</td>
+<td align="right">96,582</td>
+<td align="right">1.1%</td>
+</tr>
+<tr>
+<td>20–30</td>
+<td align="right">298,545</td>
+<td align="right">3.3%</td>
+</tr>
+<tr>
+<td>30–40</td>
+<td align="right">482,484</td>
+<td align="right">5.4%</td>
+</tr>
+<tr>
+<td>40–50</td>
+<td align="right">896,227</td>
+<td align="right">10.0%</td>
+</tr>
+<tr>
+<td>≥50</td>
+<td align="right">7,159,308</td>
+<td align="right">80.1%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>8,933,146</strong></td>
+<td align="right"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> Most SNPs had relatively high
+alternate-allele mapping quality. Approximately 80.1% had
+<code>MQM ≥50</code>.</p>
+<h3 id="id_103-mapping-quality-among-snps-with-70-completeness">10.3
+Mapping quality among SNPs with ≥70% completeness</h3>
+<p>We repeated the assessment for SNPs genotyped in at least 70% of the
+263 individuals.</p>
+<h3 id="table-9-alternate-allele-mapping-quality-among-higher-completeness-snps">Table
+9. Alternate-allele mapping quality among higher-completeness SNPs</h3>
+<table>
+<thead>
+<tr>
+<th>MQM range</th>
+<th align="right">Number of SNPs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;20</td>
+<td align="right">10,308</td>
+</tr>
+<tr>
+<td>20–30</td>
+<td align="right">36,603</td>
+</tr>
+<tr>
+<td>30–40</td>
+<td align="right">39,913</td>
+</tr>
+<tr>
+<td>40–50</td>
+<td align="right">96,047</td>
+</tr>
+<tr>
+<td>≥50</td>
+<td align="right">1,073,520</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>1,256,391</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Approximately 85.4% of these SNPs had <code>MQM ≥50</code>.</p>
+<h4 id="figure-1-alternate-allele-mapping-quality-among-snps-with-70-completeness">Figure
+1. Alternate-allele mapping quality among SNPs with ≥70%
+completeness</h4>
+<pre class="mermaid"><code>xychart-beta
+    title &quot;Alternate-allele mapping quality (MQM)&quot;
+    x-axis [&quot;&lt;20&quot;, &quot;20-30&quot;, &quot;30-40&quot;, &quot;40-50&quot;, &quot;50+&quot;]
+    y-axis &quot;SNPs (millions)&quot; 0 --&gt; 1.2
+    bar [0.010308, 0.036603, 0.039913, 0.096047, 1.073520]</code></pre>
+<p><strong>Figure interpretation:</strong> Most SNPs meeting the
+completeness threshold have high alternate-allele mapping quality. The
+higher-completeness subset also has a larger proportion of high-MQM SNPs
+than the full dataset.</p>
+<h3 id="id_104-comparing-reference-and-alternate-mapping-quality">10.4
+Comparing reference and alternate mapping quality</h3>
+<p>We examined both <code>MQM</code> and <code>MQMR</code> among the
+1,256,391 SNPs meeting the provisional completeness threshold.</p>
+<h3 id="table-10-snp-retention-under-alternative-mapping-quality-thresholds">Table
+10. SNP retention under alternative mapping-quality thresholds</h3>
+<table>
+<thead>
+<tr>
+<th>Required mapping quality for both alleles</th>
+<th align="right">SNPs failing</th>
+<th align="right">SNPs passing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥30</td>
+<td align="right">50,686</td>
+<td align="right">1,205,705</td>
+</tr>
+<tr>
+<td>≥40</td>
+<td align="right">99,534</td>
+<td align="right">1,156,857</td>
+</tr>
+<tr>
+<td>≥50</td>
+<td align="right">204,940</td>
+<td align="right">1,051,451</td>
+</tr>
+</tbody>
+</table>
+<p>Additional diagnostic result:</p>
+<p><strong>66,579 SNPs</strong> had alternate-allele mapping quality
+more than 10 points below reference-allele mapping quality.</p>
+<p>This represents approximately 5.3% of SNPs meeting the completeness
+threshold.</p>
+<p>Such differences can indicate allele-specific mapping uncertainty,
+although they do not automatically establish that a variant is
+incorrect.</p>
+<h3 id="id_105-mapping-quality-filtering-decision">10.5 Mapping-quality
+filtering decision</h3>
+<p><strong>Provisional decision:</strong> Require both
+<code>MQM ≥40</code> and <code>MQMR ≥40</code>.</p>
+<p><strong>Reasoning:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Both reference and alternate alleles should have reasonably
+confident mapping support.</li>
+<li>Requiring both values to be at least 40 would retain approximately
+92.1% of SNPs meeting the completeness threshold.</li>
+<li>A threshold of 50 would remove substantially more SNPs.</li>
+<li>The proposed threshold may reduce false-positive SNPs associated
+with ambiguous read alignments.</li>
+<li>It balances quality control with retaining enough markers for PCA
+and species identification.</li>
+</ol>
+<p><strong>Status:</strong> Diagnostic complete. Mapping-quality filter
+not yet applied.</p>
+<h2 id="id_11-allele-balance-assessment">11. Allele-Balance
+Assessment</h2>
+<h3 id="id_111-purpose">11.1 Purpose</h3>
+<p>Allele balance describes the relative representation of reference and
+alternate reads among heterozygous observations.</p>
+<p>For a diploid heterozygous genotype, approximately balanced read
+support is generally expected, although sequencing depth, sampling
+variation, and alignment bias can cause deviations.</p>
+<p>FreeBayes <code>AB</code> is a site-level annotation, rather than a
+direct measure of allele balance for each individual genotype.</p>
+<h3 id="id_112-allele-balance-distribution">11.2 Allele-balance
+distribution</h3>
+<p>The <code>AB</code> distribution was examined across all 8,933,146
+initially filtered SNPs.</p>
+<h3 id="table-11-freebayes-allele-balance-distribution">Table 11.
+FreeBayes allele-balance distribution</h3>
+<table>
+<thead>
+<tr>
+<th>AB range</th>
+<th align="right">Number of SNPs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;0.1</td>
+<td align="right">1,312,114</td>
+</tr>
+<tr>
+<td>0.1–0.2</td>
+<td align="right">420,636</td>
+</tr>
+<tr>
+<td>0.2–0.3</td>
+<td align="right">983,509</td>
+</tr>
+<tr>
+<td>0.3–0.4</td>
+<td align="right">1,567,457</td>
+</tr>
+<tr>
+<td>0.4–0.6</td>
+<td align="right">3,991,528</td>
+</tr>
+<tr>
+<td>0.6–0.8</td>
+<td align="right">632,086</td>
+</tr>
+<tr>
+<td>&gt;0.8</td>
+<td align="right">25,816</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>8,933,146</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Approximately 44.7% of SNPs had AB between 0.4 and 0.6.</p>
+<p>However, 1,312,114 SNPs had AB below 0.1, prompting further
+investigation before choosing an allele-balance threshold.</p>
+<h3 id="id_113-investigating-snps-with-very-low-allele-balance">11.3
+Investigating SNPs with very low allele balance</h3>
+<p>Five SNPs with <code>AB &lt;0.1</code> were inspected directly.</p>
+<p>All five had <code>AB = 0</code> and no heterozygous genotype calls
+in the current VCF. Instead, they contained combinations of
+homozygous-reference genotypes (<code>0/0</code>), occasional
+homozygous-alternate genotypes (<code>1/1</code>), and missing genotypes
+(<code>./.</code>).</p>
+<p>We then counted heterozygous genotype calls across all SNPs with
+<code>AB &lt;0.1</code>.</p>
+<h3 id="table-12-heterozygous-genotype-counts-among-snps-with-ab-01">Table
+12. Heterozygous genotype counts among SNPs with AB &lt;0.1</h3>
+<table>
+<thead>
+<tr>
+<th>Heterozygous calls per SNP</th>
+<th align="right">Number of SNPs</th>
+<th align="right">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero</td>
+<td align="right">1,302,260</td>
+<td align="right">99.25%</td>
+</tr>
+<tr>
+<td>1–2</td>
+<td align="right">8,343</td>
+<td align="right">0.64%</td>
+</tr>
+<tr>
+<td>More than 2</td>
+<td align="right">1,511</td>
+<td align="right">0.12%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>1,312,114</strong></td>
+<td align="right"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<h4 id="figure-2-heterozygous-genotype-counts-among-low-ab-snps">Figure
+2. Heterozygous genotype counts among low-AB SNPs</h4>
+<pre class="mermaid"><code>pie showData
+    title Heterozygote counts among SNPs with AB below 0.1
+    &quot;Zero heterozygotes&quot; : 1302260
+    &quot;1-2 heterozygotes&quot; : 8343
+    &quot;More than 2 heterozygotes&quot; : 1511</code></pre>
+<p><strong>Figure interpretation:</strong> Approximately 99.25% of SNPs
+with very low AB had no heterozygous genotype calls in the current
+filtered VCF.</p>
+<p>This is important because a SNP without heterozygous calls cannot be
+meaningfully evaluated for read balance within its currently observed
+heterozygotes.</p>
+<p>An additional consideration is that FreeBayes calculated the original
+INFO annotations before VCFtools masked genotypes with depth below 3×.
+Therefore, the current genotype calls and original site-level AB
+annotations may not reflect exactly the same observations.</p>
+<h3 id="id_114-allele-balance-filtering-decision">11.4 Allele-balance
+filtering decision</h3>
+<p><strong>Decision: Do not apply a blanket site-level AB filter at this
+stage.</strong></p>
+<p><strong>Reasoning:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Nearly all SNPs with AB below 0.1 have no heterozygous calls in the
+current VCF.</li>
+<li>Low AB therefore does not necessarily indicate poorly balanced
+heterozygous genotypes.</li>
+<li>SNPs without heterozygotes may still contain useful genetic
+variation.</li>
+<li>Such SNPs may be informative for distinguishing <em>Pocillopora</em>
+species during PCA.</li>
+<li>Applying a strict AB threshold could remove potentially valid
+markers unnecessarily.</li>
+<li>If allele balance becomes a concern later, genotype-level
+allele-balance assessment would be more informative.</li>
+</ol>
+<p><strong>Status:</strong> Diagnostic complete. No blanket AB filter
+recommended.</p>
+<h2 id="id_12-properly-paired-read-assessment">12. Properly Paired Read
+Assessment</h2>
+<h3 id="id_121-purpose">12.1 Purpose</h3>
+<p>FreeBayes provides two annotations describing properly paired read
+support:</p>
+<ul>
+<li><code>PAIRED</code>: Fraction of alternate-allele observations
+supported by properly paired reads.</li>
+<li><code>PAIREDR</code>: Fraction of reference-allele observations
+supported by properly paired reads.</li>
+</ul>
+<p>Low values can sometimes indicate problematic alignments, although
+paired-read support also depends on library preparation and read
+processing.</p>
+<h3 id="id_122-results">12.2 Results</h3>
+<p>Both metrics were examined among SNPs meeting the provisional 70%
+sample-completeness threshold.</p>
+<h3 id="table-13-properly-paired-read-support">Table 13. Properly paired
+read support</h3>
+<table>
+<thead>
+<tr>
+<th>Diagnostic</th>
+<th align="right">Number of SNPs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNPs with ≥70% completeness</td>
+<td align="right">1,256,391</td>
+</tr>
+<tr>
+<td>Missing either paired-read annotation</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Either allele paired fraction &lt;0.5</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Either allele paired fraction &lt;0.8</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Either allele paired fraction &lt;0.9</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Both paired fractions ≥0.9</td>
+<td align="right">1,256,391</td>
+</tr>
+</tbody>
+</table>
+<p>All candidate SNPs had both <code>PAIRED ≥0.9</code> and
+<code>PAIREDR ≥0.9</code>.</p>
+<p><strong>Interpretation:</strong> Properly paired read support was
+consistently high among the candidate SNPs.</p>
+<p>Although this is reassuring, properly paired reads are not
+necessarily uniquely or correctly mapped reads. Mapping quality remains
+an important complementary measure.</p>
+<h3 id="id_123-paired-read-filtering-decision">12.3 Paired-read
+filtering decision</h3>
+<p><strong>Decision: Do not add a paired-read filter at this
+stage.</strong></p>
+<p><strong>Reasoning:</strong></p>
+<ul>
+<li>All SNPs meeting the completeness threshold already have strong
+paired-read support.</li>
+<li>A threshold of 0.9 would remove no SNPs from the candidate
+dataset.</li>
+<li>Adding a filter that removes no SNPs would not improve the
+dataset.</li>
+</ul>
+<p><strong>Status:</strong> Diagnostic complete. No additional
+paired-read filter recommended.</p>
+<h2 id="id_13-combined-candidate-filter-assessment">13. Combined
+Candidate-Filter Assessment</h2>
+<h3 id="id_131-purpose">13.1 Purpose</h3>
+<p>Before creating another filtered VCF, we calculated the combined
+effects of the proposed SNP-completeness, maximum-depth, and
+mapping-quality thresholds.</p>
+<p>This is important because SNPs may fail more than one quality
+criterion. Adding removal counts from separate diagnostics could
+therefore overestimate the total number of SNPs excluded.</p>
+<p>The proposed criteria are:</p>
+<ol style="list-style-type: decimal">
+<li>SNP completeness ≥70%.</li>
+<li>Mean SNP depth ≤100×.</li>
+<li>Alternate-allele mapping quality (<code>MQM</code>) ≥40.</li>
+<li>Reference-allele mapping quality (<code>MQMR</code>) ≥40.</li>
+</ol>
+<h3 id="table-14-combined-projected-snp-retention">Table 14. Combined
+projected SNP retention</h3>
+<table>
+<thead>
+<tr>
+<th>Filtering stage</th>
+<th align="right">SNPs remaining</th>
+<th align="right">SNPs removed at this stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Current initially filtered VCF</td>
+<td align="right">8,933,146</td>
+<td align="right">—</td>
+</tr>
+<tr>
+<td>SNP completeness ≥70%</td>
+<td align="right">1,256,391</td>
+<td align="right">7,676,755</td>
+</tr>
+<tr>
+<td>Plus mean SNP depth ≤100×</td>
+<td align="right">1,254,507</td>
+<td align="right">1,884</td>
+</tr>
+<tr>
+<td>Plus MQM ≥40 and MQMR ≥40</td>
+<td align="right"><strong>1,155,557</strong></td>
+<td align="right"><strong>98,950</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The depth and mapping-quality criteria together would exclude 100,834
+SNPs after the completeness threshold.</p>
+<p>Approximately 92.0% of SNPs meeting the 70% completeness threshold
+would survive the additional proposed filters.</p>
+<h3 id="id_132-visualizing-the-combined-filtering-results">13.2
+Visualizing the combined filtering results</h3>
+<h4 id="figure-3-snp-filtering-workflow">Figure 3. SNP filtering
+workflow</h4>
+<pre class="mermaid"><code>flowchart TD
+    A[&quot;Raw FreeBayes variants&lt;br/&gt;24,037,651&quot;]
+    B[&quot;Biallelic SNP filtering&lt;br/&gt;17,907,986&quot;]
+    C[&quot;Initial VCFtools filtering&lt;br/&gt;8,933,146&quot;]
+    D[&quot;Quality diagnostics&lt;br/&gt;No additional SNPs removed&quot;]
+    E[&quot;Proposed: ≥70% completeness&lt;br/&gt;1,256,391&quot;]
+    F[&quot;Proposed: mean depth ≤100×&lt;br/&gt;1,254,507&quot;]
+    G[&quot;Proposed: MQM and MQMR ≥40&lt;br/&gt;1,155,557&quot;]
+    H[&quot;Future: species PCA and&lt;br/&gt;technical replicate assessment&quot;]
+
+    A --&gt; B --&gt; C --&gt; D
+    D -.-&gt; E
+    E --&gt; F --&gt; G --&gt; H
+
+    style A fill:#dbeafe,color:#17212b
+    style B fill:#dbeafe,color:#17212b
+    style C fill:#bbf7d0,color:#17212b
+    style D fill:#e5e7eb,color:#17212b
+    style E fill:#fef3c7,color:#17212b
+    style F fill:#fef3c7,color:#17212b
+    style G fill:#fef3c7,color:#17212b
+    style H fill:#e5e7eb,color:#17212b</code></pre>
+<p><strong>Figure interpretation:</strong> The first two filtering
+stages are complete. The later thresholds have been evaluated using
+diagnostics but have not yet been applied to generate a new VCF.</p>
+<h4 id="figure-4-projected-snp-retention">Figure 4. Projected SNP
+retention</h4>
+<pre class="mermaid"><code>xychart-beta
+    title &quot;Projected SNP retention through candidate filtering&quot;
+    x-axis [&quot;Initial VCF&quot;, &quot;70% complete&quot;, &quot;Depth &lt;=100&quot;, &quot;Both MQ &gt;=40&quot;]
+    y-axis &quot;SNPs (millions)&quot; 0 --&gt; 9
+    bar [8.933146, 1.256391, 1.254507, 1.155557]</code></pre>
+<p><strong>Figure interpretation:</strong> The 70% completeness
+threshold has the largest effect on SNP retention. The proposed
+maximum-depth and mapping-quality thresholds remove comparatively few
+additional SNPs.</p>
+<h4 id="figure-5-effect-of-depth-and-mapping-quality-filtering-after-the-completeness-threshold">Figure
+5. Effect of depth and mapping-quality filtering after the completeness
+threshold</h4>
+<pre class="mermaid"><code>xychart-beta
+    title &quot;Additional filtering after 70% completeness&quot;
+    x-axis [&quot;70% complete&quot;, &quot;Depth &lt;=100&quot;, &quot;Both MQ &gt;=40&quot;]
+    y-axis &quot;SNPs (millions)&quot; 0 --&gt; 1.4
+    bar [1.256391, 1.254507, 1.155557]</code></pre>
+<p><strong>Figure interpretation:</strong> After restricting SNPs to
+those present in at least 70% of samples, the maximum-depth threshold
+removes only 1,884 SNPs. The mapping-quality criteria then remove
+another 98,950 SNPs.</p>
+<h3 id="id_133-candidate-filtering-decision">13.3 Candidate filtering
+decision</h3>
+<p><strong>Provisional decision:</strong> Generate a candidate filtered
+VCF using the following thresholds:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Proposed threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNP completeness</td>
+<td>≥70%</td>
+</tr>
+<tr>
+<td>Mean SNP depth</td>
+<td>≤100×</td>
+</tr>
+<tr>
+<td>Alternate-allele mapping quality</td>
+<td>MQM ≥40</td>
+</tr>
+<tr>
+<td>Reference-allele mapping quality</td>
+<td>MQMR ≥40</td>
+</tr>
+<tr>
+<td>Additional minimum mean depth</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Site-level allele balance</td>
+<td>No blanket filter</td>
+</tr>
+<tr>
+<td>Properly paired read support</td>
+<td>No additional filter</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reasoning:</strong></p>
+<ul>
+<li>The completeness threshold improves the overall depth profile while
+retaining more than 1.25 million SNPs.</li>
+<li>The maximum-depth filter removes a small number of unusually
+high-depth loci.</li>
+<li>The mapping-quality filters require reasonably confident read
+mapping for both alleles.</li>
+<li>The allele-balance diagnostic does not justify a blanket AB
+filter.</li>
+<li>The paired-read metrics already show strong support among all
+candidate SNPs.</li>
+<li>Approximately 1.16 million SNPs are projected to remain, providing a
+substantial candidate dataset for further evaluation.</li>
+</ul>
+<p><strong>Important:</strong> The projected SNP count is based on
+diagnostic calculations. The candidate filtered VCF has not yet been
+generated, and its actual SNP count must be verified.</p>
+<h2 id="id_14-additional-visual-summaries">14. Additional Visual
+Summaries</h2>
+<p>The following figures summarize earlier results from Sections 1–8.
+They are included here so that the original tables and descriptions can
+remain unchanged.</p>
+<h3 id="figure-6-individual-missingness-across-all-263-samples">Figure
+6. Individual missingness across all 263 samples</h3>
+<pre class="mermaid"><code>xychart-beta
+    title &quot;Individual genotype missingness&quot;
+    x-axis [&quot;&lt;30%&quot;, &quot;30-50%&quot;, &quot;50-70%&quot;, &quot;70-90%&quot;, &quot;90%+&quot;]
+    y-axis &quot;Number of samples&quot; 0 --&gt; 150
+    bar [0, 5, 118, 135, 5]</code></pre>
+<p><strong>Interpretation:</strong> Most samples have high missingness
+in the current VCF. Nevertheless, all 263 samples are being retained
+until species-identification PCA and technical-replicate comparisons are
+completed.</p>
+<h3 id="figure-7-snp-retention-by-minimum-sample-completeness">Figure 7.
+SNP retention by minimum sample completeness</h3>
+<pre class="mermaid"><code>xychart-beta
+    title &quot;SNP retention by sample completeness threshold&quot;
+    x-axis [&quot;50%&quot;, &quot;70%&quot;, &quot;80%&quot;, &quot;90%&quot;, &quot;95%&quot;]
+    y-axis &quot;SNPs (millions)&quot; 0 --&gt; 2.5
+    bar [2.388252, 1.256391, 0.613206, 0.119552, 0.041854]</code></pre>
+<p><strong>Interpretation:</strong> Increasing the minimum
+sample-completeness requirement substantially reduces the number of
+retained SNPs.</p>
+<p>The provisional 70% threshold represents a compromise between
+retaining genetic markers and reducing missing data.</p>
+<p>A stricter completeness threshold may be evaluated later as a
+sensitivity analysis for PCA.</p>
+<h2 id="id_15-updated-snp-filtering-decision-summary">15. Updated SNP
+Filtering Decision Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Filtering criterion</th>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Biallelic SNPs</td>
+<td>Applied</td>
+<td>Exclude indels and multiallelic variants</td>
+</tr>
+<tr>
+<td>Minimum variant quality ≥20</td>
+<td>Applied</td>
+<td>Remove lower-quality variant calls</td>
+</tr>
+<tr>
+<td>Minimum minor allele count ≥2</td>
+<td>Applied initially</td>
+<td>Exclude variants with very low observed minor allele counts</td>
+</tr>
+<tr>
+<td>Minimum genotype depth ≥3×</td>
+<td>Applied</td>
+<td>Mask low-depth genotypes</td>
+</tr>
+<tr>
+<td>Individual missingness</td>
+<td>Diagnostic only</td>
+<td>Retain all individuals for species PCA and replicate
+comparisons</td>
+</tr>
+<tr>
+<td>SNP completeness ≥70%</td>
+<td>Provisional</td>
+<td>Balance SNP retention with reduced missingness</td>
+</tr>
+<tr>
+<td>Additional minimum mean depth</td>
+<td>Not recommended</td>
+<td>Higher-completeness SNPs already show improved depth</td>
+</tr>
+<tr>
+<td>Maximum mean depth ≤100×</td>
+<td>Provisional</td>
+<td>Remove a small number of unusually high-depth loci</td>
+</tr>
+<tr>
+<td>MQM ≥40 and MQMR ≥40</td>
+<td>Provisional</td>
+<td>Require good mapping quality for both alleles</td>
+</tr>
+<tr>
+<td>Site-level allele balance</td>
+<td>No blanket filter</td>
+<td>Low AB is strongly associated with zero heterozygous calls</td>
+</tr>
+<tr>
+<td>PAIRED and PAIREDR</td>
+<td>No additional filter</td>
+<td>All candidate SNPs have paired-read fractions ≥0.9</td>
+</tr>
+<tr>
+<td>Global MAF</td>
+<td>Pending</td>
+<td>Compare suitable thresholds before final downstream analyses</td>
+</tr>
+<tr>
+<td>Heterozygosity filtering</td>
+<td>Pending</td>
+<td>Evaluate problematic loci without prematurely excluding
+species-informative SNPs</td>
+</tr>
+<tr>
+<td>SNP thinning / linkage</td>
+<td>Pending</td>
+<td>Reduce non-independence where appropriate for PCA</td>
+</tr>
+<tr>
+<td>Sample removal</td>
+<td>Not permitted at this stage</td>
+<td>Complete species identification and technical replicate assessment
+first</td>
+</tr>
+</tbody>
+</table>
+<h2 id="id_16-reproducibility-notes">16. Reproducibility Notes</h2>
+<p>The following points are important for interpreting and reproducing
+these analyses:</p>
+<ul>
+<li>All diagnostics were performed using
+<code>02_initial_vcftools.vcf.gz</code>, unless otherwise stated.</li>
+<li>This VCF contains 8,933,146 SNPs and 263 individuals.</li>
+<li>The original <code>TotalRawSNPs.vcf</code> remains preserved.</li>
+<li>The candidate completeness, maximum-depth, and mapping-quality
+filters have not yet been applied.</li>
+<li>The site-missingness file <code>04_site_missingness.lmiss</code>
+contains six columns; <code>F_MISS</code> is column 6.</li>
+<li>The site-mean-depth file <code>04_site_mean_depth.ldepth.mean</code>
+contains four columns; <code>MEAN_DEPTH</code> is column 3.</li>
+<li>Combined diagnostics used chromosome and position checks to verify
+that corresponding rows from different files referred to the same
+SNP.</li>
+<li>FreeBayes INFO annotations were generated during variant calling and
+may not fully reflect subsequent genotype masking by VCFtools.</li>
+<li>All 263 coral samples remain retained.</li>
+<li>No population-level MAF filters will be applied using individual
+sampling sites as populations because sampling sites contain only 1–3
+individuals.</li>
+<li>Global MAF thresholds of 0.01 and 0.05 remain under
+consideration.</li>
+<li>The projected SNP counts are diagnostic estimates, not verified
+counts from a newly generated VCF.</li>
+<li>All Mermaid figures contain their numerical data directly in the
+Markdown code and do not require separate image files.</li>
+</ul>
+<h2 id="id_17-next-planned-analyses">17. Next Planned Analyses</h2>
+<ol style="list-style-type: decimal">
+<li>Generate a candidate filtered VCF using the provisional
+SNP-completeness, maximum-depth, and mapping-quality thresholds.</li>
+<li>Confirm the resulting SNP count and verify that all 263 individuals
+remain present.</li>
+<li>Examine global minor allele frequency and genotype
+heterozygosity.</li>
+<li>Evaluate SNP thinning or linkage disequilibrium pruning for
+PCA.</li>
+<li>Perform PCA for species identification.</li>
+<li>Compare technical replicates and assess sample consistency.</li>
+<li>Select appropriate individuals for downstream seascape genomics,
+targeting one suitable individual per sampling site.</li>
+<li>Document any further filtering decisions, parameter changes,
+software commands, runtimes, and SNP counts.</li>
+</ol>
+<p><strong>Current status:</strong> Initial SNP filtering and additional
+quality diagnostics are complete. The next candidate filtering step has
+been evaluated but not yet executed. All 263 individuals remain
+retained.</p>
+<pre class="mermaid"><code>pie showData
+    title Individual missingness across 263 samples
+    &quot;30-50% missing&quot; : 5
+    &quot;50-70% missing&quot; : 118
+    &quot;70-90% missing&quot; : 135
+    &quot;90% or more missing&quot; : 5</code></pre>
+
+</body>
+</html>
