@@ -620,15 +620,6 @@ We then counted heterozygous genotype calls across all SNPs with
 | More than 2                |          1,511 |      0.12% |
 | **Total**                  |  **1,312,114** |   **100%** |
 
-#### Figure 2. Heterozygous genotype counts among low-AB SNPs
-
-``` mermaid
-pie showData
-    title Heterozygote counts among SNPs with AB below 0.1
-    "Zero heterozygotes" : 1302260
-    "1-2 heterozygotes" : 8343
-    "More than 2 heterozygotes" : 1511
-```
 
 **Figure interpretation:** Approximately 99.25% of SNPs with very low AB
 had no heterozygous genotype calls in the current filtered VCF.
