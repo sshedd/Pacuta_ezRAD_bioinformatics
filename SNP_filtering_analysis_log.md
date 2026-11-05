@@ -246,16 +246,7 @@ bcftools index -n 01_biallelic_snps.vcf.gz
 bcftools query -l 01_biallelic_snps.vcf.gz | wc -l
 ```
 
-## 7. Next Filtering Stage — VCFtools
-
-Following successful completion of the initial BCFtools stage, apply the
-following filters from the ezRAD analysis document:
-
-- Minimum variant quality: `--minQ 20`
-- Minimum minor allele count: `--mac 2`
-- Minimum genotype depth: `--minDP 3`
-
-## 8. Filtering Results Summary
+## 7. Filtering Results Summary
 
 ### Table 1. SNP filtering and quality-control summary
 
