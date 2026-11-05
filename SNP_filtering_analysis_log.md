@@ -917,21 +917,6 @@ these analyses:
 - All Mermaid figures contain their numerical data directly in the
   Markdown code and do not require separate image files.
 
-## 17. Next Planned Analyses
-
-1.  Generate a candidate filtered VCF using the provisional
-    SNP-completeness, maximum-depth, and mapping-quality thresholds.
-2.  Confirm the resulting SNP count and verify that all 263 individuals
-    remain present.
-3.  Examine global minor allele frequency and genotype heterozygosity.
-4.  Evaluate SNP thinning or linkage disequilibrium pruning for PCA.
-5.  Perform PCA for species identification.
-6.  Compare technical replicates and assess sample consistency.
-7.  Select appropriate individuals for downstream seascape genomics,
-    targeting one suitable individual per sampling site.
-8.  Document any further filtering decisions, parameter changes,
-    software commands, runtimes, and SNP counts.
-
 **Current status:** Initial SNP filtering and additional quality
 diagnostics are complete. The next candidate filtering step has been
 evaluated but not yet executed. All 263 individuals remain retained.
@@ -944,3 +929,71 @@ pie showData
     "70-90% missing" : 135
     "90% or more missing" : 5
 ```
+
+## SNP Filtering Summary and Decision Log
+
+### Overview
+
+The initial dDocent variant-calling workflow produced **24,037,651 variant records across 263 samples**. SNP filtering was designed to retain reliable, informative variants for species identification, technical replicate comparisons, and subsequent seascape genomic analyses.
+
+Because the dataset contains only 1–3 samples per sampling site, filtering decisions were based primarily on variant quality, sequencing depth, genotype completeness, and mapping reliability rather than population-specific allele frequencies or Hardy–Weinberg equilibrium.
+
+**All 263 samples were retained throughout the filtering steps completed to date.** Sample selection will occur after SNP filtering, species identification using PCA, and technical replicate evaluation.
+
+### Summary of filtering steps and results
+
+| Step | Filter or analysis | SNPs retained | Reason for filter or analysis | Result and decision |
+|---|---|---:|---|---|
+| 0 | Original dDocent VCF (`TotalRawSNPs.vcf`) | 24,037,651 | Establish the starting dataset containing all called variants | 263 samples; baseline for filtering |
+| 1 | Biallelic SNPs; exclude non-reference-only sites; mean site DP ≤2,000 | 17,907,986 | Retain simple SNPs and remove extreme-depth sites potentially associated with repetitive or problematic regions | 74.5% of original variants retained |
+| 2 | QUAL ≥20; minor allele count ≥2; genotype DP ≥3 | 8,933,146 | Remove low-quality and singleton variants while masking individual genotype calls supported by fewer than three reads | 49.9% of Step 1 SNPs retained; 263 samples maintained |
+| 3 | Individual missingness diagnostic | 8,933,146 | Assess variation in sequencing completeness among individuals before deciding on sample selection | 253 of 263 samples had ≥50% missing genotypes; no samples removed |
+| 4 | Site missingness diagnostic; candidate ≥70% genotype presence | 1,256,391 projected | Identify loci with adequate genotype representation across samples for PCA and replicate comparisons | 14.1% of Step 2 SNPs meet the proposed threshold; filter not yet applied |
+| 5 | Mean site depth diagnostic; candidate mean DP ≤100 | 1,254,507 projected | Exclude unusually high-depth sites that may represent repetitive regions, paralogs, or mapping artifacts | Removes 1,884 sites from the ≥70% presence subset; filter not yet applied |
+| 6 | Mapping-quality diagnostic; candidate MQM ≥40 and MQMR ≥40 | 1,155,557 projected | Require reliable mapping of reads supporting both alternate and reference alleles | Combined with ≥70% presence and mean DP ≤100, retains approximately 1.16 million SNPs; filters not yet applied |
+| 7 | Allele-balance diagnostic | No additional filtering | Evaluate whether allele balance could help identify unreliable SNPs | Most very low AB values occur at sites without heterozygotes; no blanket AB filter recommended |
+| 8 | Paired-read diagnostic | No additional filtering | Evaluate whether poorly paired reads require additional filtering | All sites in the ≥70% presence subset had PAIRED and PAIREDR ≥0.9; no additional filter needed |
+
+*Important: Steps 4–8 are diagnostic evaluations and proposed filtering decisions, not additional filtering commands already executed. The projected counts should not be described as final VCF results.*
+
+### Key filtering decisions
+
+**Biallelic SNPs:** Retaining biallelic variants simplifies downstream PCA and genotype-based analyses. Extreme mean depth was initially limited to 2,000 to exclude exceptionally high-coverage sites without prematurely applying a restrictive depth threshold.
+
+**Variant quality and genotype depth:** A minimum site QUAL of 20 was selected as an initial quality threshold. A minor allele count of two removes singleton variants, while minimum genotype depth of three reduces reliance on very weak genotype calls. Low-depth genotypes are masked rather than removing entire samples.
+
+**Site completeness:** A candidate threshold of 70% genotype presence was selected as a balance between SNP retention and missing data. The diagnostic results showed that approximately 1.26 million SNPs meet this threshold, providing a substantial marker set for further evaluation.
+
+**Mean depth:** Sites with unusually high mean depth may reflect repetitive or duplicated genomic regions. A candidate upper threshold of 100 was supported by the observed depth distribution, where only 1,884 sites meeting the completeness threshold exceeded this value.
+
+**Mapping quality:** Requiring both MQM and MQMR to be at least 40 provides a way to evaluate mapping reliability for both alleles. The combined diagnostic retained 1,155,557 candidate SNPs after the proposed completeness, depth, and mapping-quality requirements.
+
+**Allele balance:** A blanket site-level AB filter was not selected because very low AB values were overwhelmingly associated with sites lacking heterozygotes. Applying such a filter could unnecessarily eliminate legitimate variants.
+
+**Paired-read support:** Additional paired-read filtering was not selected because every site in the ≥70% presence subset already met the evaluated paired-read threshold.
+
+**Sample retention:** All 263 samples remain in the dataset. Samples will not be removed until species identification and technical replicate comparisons have been completed.
+
+### Overall retention
+
+| Comparison | SNPs | Percentage |
+|---|---:|---:|
+| Original variant records | 24,037,651 | 100% |
+| After initial biallelic SNP selection | 17,907,986 | 74.5% of original records |
+| After initial VCFtools filtering | 8,933,146 | 37.2% of original records |
+| Candidate sites with ≥70% genotype presence | 1,256,391 | 14.1% of Step 2 SNPs |
+| Candidate sites meeting completeness, depth, and mapping-quality requirements | 1,155,557 | 12.9% of Step 2 SNPs |
+
+The combined diagnostic suggests that approximately **1.16 million SNPs** could be retained under the proposed completeness, depth, and mapping-quality thresholds. This is a projected count, not yet a finalized filtered VCF.
+
+### Next steps
+
+1. Apply the selected site completeness, mean-depth, and mapping-quality filters to generate the next VCF.
+2. Verify the resulting SNP count and confirm that all 263 samples remain present.
+3. Evaluate additional filtering requirements, including linkage disequilibrium and genotype-level quality, as appropriate for the intended analyses.
+4. Perform PCA to investigate species identification and genetic structure.
+5. Compare technical replicates to assess genotyping consistency.
+6. Select the appropriate sample representation for each sampling site before downstream seascape genomic analyses.
+
+**Current status:** Initial filtering through Step 2 is complete. Site completeness, depth, mapping quality, allele balance, and paired-read diagnostics have been evaluated. The next combined SNP filtering step has not yet been applied.
+
