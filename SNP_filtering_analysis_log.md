@@ -397,60 +397,10 @@ VCFtools confirmed that 258 individuals and 8,933,146 sites were included in the
 
 ### Visualizing the Distribution
 
-Site missingness was visualized using a histogram with a bin width of 0.02.
+![Site missingness histogram after removing five individuals](figures/08_site_missingness_258ind.png)
 
-```r
-library(ggplot2)
-
-site_missingness <- read.table(
-  "08_site_missingness_258ind.lmiss",
-  header = TRUE
-)
-
-ggplot(site_missingness, aes(x = F_MISS)) +
-  geom_histogram(
-    binwidth = 0.02,
-    boundary = 0,
-    fill = "steelblue",
-    color = "white"
-  ) +
-  coord_cartesian(xlim = c(0, 1)) +
-  labs(
-    title = "Site Missingness After Removing 5 Individuals",
-    subtitle = "258 individuals | 8,933,146 SNPs",
-    x = "Proportion of individuals missing per SNP",
-    y = "Number of SNPs"
-  ) +
-  theme_classic(base_size = 12)
 ```
 
-![Site missingness histogram following removal of five individuals](figures/08_site_missingness_258ind.png)
-
-**Figure:** Distribution of site missingness across 8,933,146 SNPs following removal of five individuals. A histogram bin width of 0.02 was selected to visualize the distribution.
-
-The histogram showed a relatively flat distribution of SNP counts across intermediate missingness values, followed by a pronounced increase in SNP counts at high missingness values (approximately 0.85–1.00). No distinct break was evident that would independently justify a specific filtering threshold.
-
-### Evaluating SNP Retention
-
-The number of SNPs retained under several candidate maximum site-missingness thresholds was calculated in R:
-
-```r
-thresholds <- c(0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70)
-
-retention <- data.frame(
-  Max_missingness = thresholds,
-  SNPs_retained = sapply(
-    thresholds,
-    function(x) sum(site_missingness$F_MISS <= x)
-  )
-)
-
-retention$Percent_retained <- round(
-  100 * retention$SNPs_retained / nrow(site_missingness),
-  2
-)
-
-print(retention)
 ```
 
 | Maximum site missingness | Minimum completeness | SNPs retained | Percentage retained |
@@ -475,37 +425,310 @@ Although the histogram did not reveal a clear natural breakpoint, 70% completene
 
 **Status:** Threshold selected; filtering will be performed in the next step.
 
-### Table 5. Mean SNP depth among SNPs with ≥70% completeness
+### 3. Invariant site check 
 
-The site-missingness and mean-depth diagnostic files were compared to
-assess sequencing depth among SNPs genotyped in at least 70% of the 263
-individuals.
+## Post-Individual-Removal MAC Reassessment
 
-This analysis was diagnostic only; no additional SNPs or individuals
-were removed.
+Following removal of five individuals with ≥90% missing genotypes and application of the 70% site-completeness threshold, the resulting VCF contained **258 individuals and 1,334,122 SNPs**.
 
-| **Metric**                     |         **Result** |
-|--------------------------------|-------------------:|
-| SNPs meeting ≥70% completeness |          1,256,391 |
-| Average mean SNP depth         |            12.227× |
-| SNPs with mean depth below 3×  |                  0 |
-| SNPs with mean depth 3–5×      |      3,148 (0.25%) |
-| SNPs with mean depth ≥5×       | 1,253,243 (99.75%) |
+Although a minor allele count (MAC) threshold of ≥2 had been applied during initial SNP filtering, removing individuals can change allele counts and cause previously polymorphic sites to become invariant or fall below the original MAC threshold.
 
-**Interpretation:** SNPs meeting the provisional 70% completeness
-threshold had substantially higher mean depth than the full dataset
-(12.227× versus 4.753×). Nearly all SNPs in this subset (99.75%) had a
-mean depth of at least 5×.
+### Checking for invariant sites
 
-This indicates that low mean depth across the full dataset is strongly
-associated with SNPs having higher missingness. Restricting analyses to
-SNPs with greater completeness may improve the overall coverage profile
-without requiring an additional minimum mean-depth filter.
+The number of SNPs with at least one observed minor allele was calculated using:
 
-**Filtering decision:** No additional minimum mean-depth threshold will
-be applied at this stage. The provisional 70% completeness threshold
-will be evaluated alongside minor allele frequency and other SNP-quality
-criteria before final filtering.
+```bash
+bcftools view \
+  -c 1:minor \
+  -H 09_site_completeness_70.vcf.gz | wc -l
+```
+
+**Result:** 1,334,010 SNPs retained at MAC ≥1.
+
+Therefore, **112 sites** no longer contained an observed minor allele after individual removal.
+
+A second diagnostic evaluated the original MAC ≥2 criterion:
+
+```bash
+bcftools view \
+  -c 2:minor \
+  -H 09_site_completeness_70.vcf.gz | wc -l
+```
+
+**Result:** 1,332,396 SNPs retained.
+
+| Category | Number of SNPs |
+|---|---:|
+| SNPs before MAC reassessment | 1,334,122 |
+| Invariant sites (MAC = 0) | 112 |
+| Singleton minor alleles (MAC = 1) | 1,614 |
+| Total sites failing MAC ≥2 | 1,726 |
+| **SNPs satisfying MAC ≥2** | **1,332,396** |
+
+Only 0.13% of SNPs failed the reassessed MAC ≥2 threshold.
+
+### Reapplying the MAC filter
+
+The MAC ≥2 criterion was reapplied to ensure that retained SNPs continued to satisfy the original filtering requirement.
+
+```bash
+bcftools view \
+  -c 2:minor \
+  -Oz \
+  -o 10_site70_mac2.vcf.gz \
+  09_site_completeness_70.vcf.gz
+
+bcftools index -t 10_site70_mac2.vcf.gz
+```
+
+**Output:** `10_site70_mac2.vcf.gz`
+
+**SNPs retained:** 1,332,396  
+**Individuals retained:** 258
+
+This VCF was used for subsequent SNP quality assessments.
+
+---
+
+## Examination of Mean Site Depth
+
+Mean sequencing depth was examined to identify low-coverage SNPs and unusually high-depth sites that could potentially represent repetitive genomic regions or mapping artifacts.
+
+The mean site-depth distribution was calculated using VCFtools:
+
+```bash
+vcftools \
+  --gzvcf 10_site70_mac2.vcf.gz \
+  --site-mean-depth \
+  --out 11_site_mean_depth_258ind_site70_mac2
+```
+
+**Output file:** `11_site_mean_depth_258ind_site70_mac2.ldepth.mean`
+
+VCFtools confirmed that all 258 individuals and 1,332,396 SNPs were included. The output contained 1,332,397 lines, including the header.
+
+### Visualizing mean site depth in R
+
+```r
+library(ggplot2)
+
+depth <- read.table(
+  "11_site_mean_depth_258ind_site70_mac2.ldepth.mean",
+  header = TRUE
+)
+
+ggplot(depth, aes(MEAN_DEPTH)) +
+  geom_freqpoly(binwidth = 5) +
+  scale_y_continuous(trans = "log10") +
+  labs(
+    title = "Mean Site Depth Distribution",
+    x = "Mean site depth (×)",
+    y = "Number of SNPs (log10 scale)"
+  ) +
+  theme_classic()
+```
+![Mean site depth distribution](figures/11_site_mean_depth_258ind_site70_mac2.png)
+
+The frequency polygon revealed a strong peak at relatively low mean sequencing depth and a long tail containing a small number of exceptionally high-depth SNPs.
+
+### Mean site-depth summary
+
+| Statistic | Mean site depth |
+|---|---:|
+| Minimum | 4.296× |
+| First quartile | 8.567× |
+| Median | 10.089× |
+| Mean | 12.015× |
+| Third quartile | 12.344× |
+| Maximum | 1,026.350× |
+
+The median mean site depth was approximately 10×, with the middle 50% of SNPs between approximately 8.6× and 12.3×.
+
+### Evaluating maximum mean-depth thresholds
+
+The number of SNPs exceeding several potential maximum mean-depth thresholds was calculated in R:
+
+```r
+thresholds <- c(50, 100, 200, 500)
+
+data.frame(
+  Max_Mean_Depth = thresholds,
+  SNPs_Above = sapply(
+    thresholds,
+    function(x) sum(depth$MEAN_DEPTH > x)
+  ),
+  Percent_Above = round(
+    sapply(
+      thresholds,
+      function(x) mean(depth$MEAN_DEPTH > x) * 100
+    ),
+    4
+  )
+)
+```
+
+| Maximum mean depth | SNPs exceeding threshold | Percentage exceeding threshold |
+|---|---:|---:|
+| 50× | 11,335 | 0.8507% |
+| 100× | 1,898 | 0.1425% |
+| 200× | 152 | 0.0114% |
+| 500× | 21 | 0.0016% |
+
+### Depth-filtering decision
+
+**Proposed maximum mean depth: 500×.**
+
+A maximum mean site depth of 500× was selected as a conservative upper threshold, consistent with the ezRAD analysis document. Only 21 SNPs (0.0016%) exceeded this value.
+
+No additional minimum mean-depth threshold was selected at this stage because the primary depth distribution was relatively low and a minimum per-genotype depth of 3× had already been applied during initial filtering.
+
+**Status:** Depth thresholds selected but not yet applied to the VCF.
+
+---
+
+## Evaluation of Global Minor Allele Frequency (MAF)
+
+Minor allele frequency was examined to determine an appropriate threshold for excluding rare variants while retaining genetic variation potentially relevant to individual-based seascape genomics analyses.
+
+Because sampling was individual-based, with only 1–2 individuals per sampling site, population-specific MAF filtering was not considered appropriate. Instead, allele frequencies were calculated across all 258 retained individuals (global MAF).
+
+### Calculating allele frequencies
+
+```bash
+vcftools \
+  --gzvcf 10_site70_mac2.vcf.gz \
+  --freq2 \
+  --out 12_maf_distribution
+```
+
+**Output file:** `12_maf_distribution.frq`
+
+VCFtools reported allele-frequency statistics for all 1,332,396 SNPs across 258 individuals.
+
+### Importing and calculating MAF in R
+
+The VCFtools frequency file contained six data columns but only five header labels. To avoid an R import error caused by repeated scaffold names being interpreted as row names, the original header was skipped and column names were assigned manually.
+
+```r
+library(ggplot2)
+
+maf <- read.table(
+  "12_maf_distribution.frq",
+  header = FALSE,
+  skip = 1,
+  col.names = c(
+    "CHROM", "POS", "N_ALLELES",
+    "N_CHR", "FREQ1", "FREQ2"
+  )
+)
+
+maf$MAF <- pmin(maf$FREQ1, maf$FREQ2)
+
+summary(maf$MAF)
+```
+
+The smaller of the two allele frequencies was used as the MAF for each biallelic SNP.
+
+### Visualizing the MAF distribution
+
+```r
+ggplot(maf, aes(x = MAF)) +
+  geom_freqpoly(
+    binwidth = 0.01,
+    color = "steelblue"
+  ) +
+  geom_vline(
+    xintercept = 0.05,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  labs(
+    title = "Minor Allele Frequency Distribution",
+    subtitle = "258 individuals | 1,332,396 SNPs",
+    x = "Minor allele frequency",
+    y = "Number of SNPs"
+  ) +
+  theme_classic()
+```
+![Global minor allele frequency distribution](figures/12_maf_distribution.png)
+
+### Comparison of candidate global MAF thresholds
+
+Several MAF thresholds were evaluated without removing SNPs from the VCF:
+
+```r
+thresholds <- c(0.01, 0.02, 0.03, 0.05)
+
+data.frame(
+  Min_MAF = thresholds,
+  SNPs_Retained = sapply(
+    thresholds,
+    function(x) sum(maf$MAF >= x, na.rm = TRUE)
+  ),
+  Percent_Retained = round(
+    sapply(
+      thresholds,
+      function(x) mean(maf$MAF >= x, na.rm = TRUE) * 100
+    ),
+    2
+  )
+)
+```
+
+**Table. SNP retention under alternative global MAF thresholds.**
+
+| Minimum global MAF | SNPs retained | SNPs removed | Retained (%) |
+|---|---:|---:|---:|
+| 0.01 | 879,199 | 453,197 | 65.99 |
+| 0.02 | 687,360 | 645,036 | 51.59 |
+| 0.03 | 624,857 | 707,539 | 46.90 |
+| 0.05 | 536,457 | 795,939 | 40.26 |
+
+All comparisons were based on the same input dataset of 1,332,396 SNPs.
+
+A global MAF threshold of 0.05 would remove approximately 59.74% of SNPs, whereas a threshold of 0.01 would retain approximately 65.99%.
+
+### MAF-filtering decision
+
+**Selected global MAF threshold: ≥0.01.**
+
+The less restrictive threshold of 0.01 was selected to balance the exclusion of very rare variants with retention of potentially informative genetic variation. Because the study examines genotype–environment relationships across individually sampled coral colonies, preserving variants that may be geographically restricted was considered important.
+
+The selected threshold is expected to retain **879,199 SNPs**, approximately 342,742 more than a global MAF threshold of 0.05.
+
+**Status:** MAF ≥0.01 selected; final retention count should be confirmed from the filtered VCF.
+
+---
+
+## Hardy–Weinberg Equilibrium (HWE) Filtering Decision
+
+**HWE filtering will not be applied.**
+
+*Pocillopora acuta* exhibits both sexual and asexual reproduction, and the study system may include triploid individuals. These biological characteristics can violate assumptions underlying conventional diploid HWE tests.
+
+Furthermore, departures from HWE may reflect population structure, reproductive biology, or selection and are not necessarily indicators of poor SNP quality. Removing such loci could eliminate variation relevant to seascape genomics.
+
+Therefore, HWE deviation will not be used as a SNP exclusion criterion.
+
+---
+
+## Summary of Filtering Decisions
+
+| Filtering criterion | Threshold | Status |
+|---|---|---|
+| Individual missingness | Remove individuals with ≥90% missing genotypes | Applied |
+| Site completeness | ≥70% genotyped individuals | Applied |
+| Minor allele count | MAC ≥2, reassessed after individual removal | Applied |
+| Minimum mean site depth | None beyond existing per-genotype DP ≥3 | Omitted |
+| Maximum mean site depth | ≤500× | Selected, not yet applied |
+| Global MAF | ≥0.01 | Selected; application to be confirmed |
+| Local/population-specific MAF | Not applicable to individual-based sampling | Omitted |
+| HWE | No HWE filtering | Omitted |
+| Allele length, allele balance, mapping quality, paired-read metrics, QUAL/DP | To be evaluated | Pending |
+
+**Current confirmed dataset:** `10_site70_mac2.vcf.gz` — 258 individuals and 1,332,396 SNPs.
+
+**Next filtering stages:** Apply global MAF ≥0.01, confirm SNP retention, evaluate maximum mean depth of 500×, and assess additional site-quality filters.
 
 ### Table 6. Output files generated
 
