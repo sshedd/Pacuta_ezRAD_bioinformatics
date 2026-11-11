@@ -712,6 +712,38 @@ Therefore, HWE deviation will not be used as a SNP exclusion criterion.
 
 ---
 
+### Application of Maximum Mean Site Depth Filter (500×)
+
+Following global MAF filtering, a maximum mean site depth threshold of 500× was applied to exclude exceptionally high-coverage SNPs that could potentially reflect repetitive genomic regions or mapping artifacts.
+
+No additional minimum mean-depth threshold was applied because the mean site-depth distribution was relatively low and a minimum per-genotype depth of 3× had already been used during initial filtering.
+
+```bash
+vcftools \
+  --gzvcf 13_global_maf001.vcf.gz \
+  --max-meanDP 500 \
+  --recode \
+  --recode-INFO-all \
+  --stdout \
+  2> 14_max_meanDP500.log \
+| bgzip -c > 14_maf001_maxmeanDP500.vcf.gz
+```
+
+**Filtering results:**
+
+| Metric | Result |
+|---|---:|
+| Input SNPs | 879,199 |
+| SNPs removed | 13 |
+| SNPs retained | 879,186 |
+| Individuals retained | 258 |
+| Maximum mean site depth | 500× |
+
+**Output:** `14_maf001_maxmeanDP500.vcf.gz`
+
+The filter removed only 0.0015% of SNPs, retaining nearly all markers while excluding the most extreme high-depth outliers.
+
+
 ## Summary of Filtering Decisions
 
 | Filtering criterion | Threshold | Status |
