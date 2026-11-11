@@ -370,81 +370,110 @@ bcftools index -n 07_initial_filtered_258ind.vcf.gz
 
 These checks confirm file integrity, the number of retained individuals, and the number of variant records. **Final verification results should be recorded after the commands complete successfully.**
 
-### 1: Assessing site missingness
+### 2: Assessing site missingness
 
-After confirming the 258-individual VCF, site missingness will be recalculated using VCFtools. The distribution of SNP missingness will then be visualized using histograms with several bin widths (e.g., 0.05, 0.02, 0.01, and 0.005).
+## Site Missingness Analysis Following Individual Filtering
 
-The goal is to investigate whether the distribution contains a meaningful break that could help guide the choice of a site-missingness filtering threshold. The threshold will be selected after examining the distribution rather than applying an arbitrary cutoff immediately.
+### Objective
 
-![](SNP_filtering_analysis_log_files/figure-gfm/individual-missingness-1.png)<!-- -->
+Following the removal of five individuals with greater than 90% missing genotype data, site missingness was recalculated to evaluate the distribution of missing genotypes across SNPs and select an appropriate site-completeness threshold.
 
-**Interpretation:** Individual missingness was high across the dataset.
-A total of 253 individuals (96.2%) had at least 50% missing genotypes at
-this stage. This may reflect uneven SNP coverage among individuals and
-the effect of the minimum genotype depth filter (`--minDP 3`). No
-individuals were removed.
+The updated dataset contained **258 individuals and 8,933,146 SNPs**.
 
-### Table 3. SNP completeness and potential retention thresholds
+### Calculating Site Missingness
 
-Calculated using VCFtools `--missing-site` on 8,933,146 SNPs across 263
-individuals.
+Site missingness was calculated using VCFtools:
 
-| **Minimum SNP genotyping rate** | **Equivalent maximum missingness** | **SNPs meeting threshold** | **Percentage of current SNPs** |
-|----|----|---:|---:|
-| ≥95% | ≤5% | 41,854 | 0.47% |
-| ≥90% | ≤10% | 119,552 | 1.34% |
-| ≥80% | ≤20% | 613,206 | 6.86% |
-| ≥70% | ≤30% | 1,256,391 | 14.06% |
-| ≥50% | ≤50% | 2,388,252 | 26.73% |
+```bash
+vcftools \
+  --gzvcf 07_initial_filtered_258ind.vcf.gz \
+  --missing-site \
+  --out 08_site_missingness_258ind
+```
 
-![](SNP_filtering_analysis_log_files/figure-gfm/snp-completeness-1.png)<!-- -->
+The resulting `08_site_missingness_258ind.lmiss` file contained the proportion of missing genotypes (`F_MISS`) at each SNP.
 
-**Interpretation:** A minimum genotyping rate of 70% would retain
-approximately 1.26 million SNPs before further filtering. This threshold
-is being considered because it balances SNP retention and completeness
-and is comparable to the sea cucumber seascape genomics workflow.
+VCFtools confirmed that 258 individuals and 8,933,146 sites were included in the analysis.
 
-**Decision status:** A minimum genotyping rate of 70%
-(`--max-missing 0.70`) is the provisional preferred threshold, supported
-by the mean-depth assessment below. It has **not yet been applied** to
-the VCF.
+### Visualizing the Distribution
 
-### Table 4. Mean SNP depth distribution
+Site missingness was visualized using a histogram with a bin width of 0.02.
 
-Calculated using VCFtools `--site-mean-depth` on 8,933,146 SNPs across
-263 individuals.
+```r
+library(ggplot2)
 
-| **Mean SNP depth** | **Number of SNPs** | **Percentage of SNPs** |
-|--------------------|-------------------:|-----------------------:|
-| Less than 3×       |          4,032,752 |                 45.14% |
-| 3–5×               |          2,395,442 |                 26.82% |
-| 5–10×              |          1,780,913 |                 19.94% |
-| 10–20×             |            628,454 |                  7.04% |
-| 20–50×             |             84,321 |                  0.94% |
-| 50–100×            |              9,348 |                  0.10% |
-| ≥100×              |              1,916 |                  0.02% |
-| **Total**          |      **8,933,146** |               **100%** |
+site_missingness <- read.table(
+  "08_site_missingness_258ind.lmiss",
+  header = TRUE
+)
 
-**Summary statistics:**
+ggplot(site_missingness, aes(x = F_MISS)) +
+  geom_histogram(
+    binwidth = 0.02,
+    boundary = 0,
+    fill = "steelblue",
+    color = "white"
+  ) +
+  coord_cartesian(xlim = c(0, 1)) +
+  labs(
+    title = "Site Missingness After Removing 5 Individuals",
+    subtitle = "258 individuals | 8,933,146 SNPs",
+    x = "Proportion of individuals missing per SNP",
+    y = "Number of SNPs"
+  ) +
+  theme_classic(base_size = 12)
+```
 
-| **Metric**                    |          **Value** |
-|-------------------------------|-------------------:|
-| Total SNPs assessed           |          8,933,146 |
-| Overall mean SNP depth        |             4.753× |
-| Minimum mean SNP depth        |             1.128× |
-| Maximum mean SNP depth        |          1,014.75× |
-| SNPs with mean depth below 5× | 6,428,194 (71.96%) |
+![Site missingness histogram following removal of five individuals](figures/08_site_missingness_258ind.png)
 
-**Interpretation:** Most SNPs had relatively low mean sequencing depth
-across the full dataset. Approximately 72% had a mean depth below 5×.
-However, low mean depth may partly reflect uneven coverage and high
-missingness across individuals rather than uniformly low depth at
-successfully genotyped sites.
+**Figure:** Distribution of site missingness across 8,933,146 SNPs following removal of five individuals. A histogram bin width of 0.02 was selected to visualize the distribution.
 
-The initial VCFtools filtering included `--minDP 3`, which masks
-individual genotypes below three reads. Therefore, mean SNP depth and
-individual genotype depth should not be interpreted as equivalent
-measurements.
+The histogram showed a relatively flat distribution of SNP counts across intermediate missingness values, followed by a pronounced increase in SNP counts at high missingness values (approximately 0.85–1.00). No distinct break was evident that would independently justify a specific filtering threshold.
+
+### Evaluating SNP Retention
+
+The number of SNPs retained under several candidate maximum site-missingness thresholds was calculated in R:
+
+```r
+thresholds <- c(0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70)
+
+retention <- data.frame(
+  Max_missingness = thresholds,
+  SNPs_retained = sapply(
+    thresholds,
+    function(x) sum(site_missingness$F_MISS <= x)
+  )
+)
+
+retention$Percent_retained <- round(
+  100 * retention$SNPs_retained / nrow(site_missingness),
+  2
+)
+
+print(retention)
+```
+
+| Maximum site missingness | Minimum completeness | SNPs retained | Percentage retained |
+|---|---|---:|---:|
+| 10% | 90% | 144,403 | 1.62% |
+| 20% | 80% | 698,614 | 7.82% |
+| **30%** | **70%** | **1,334,122** | **14.93%** |
+| 40% | 60% | 1,894,520 | 21.21% |
+| 50% | 50% | 2,446,666 | 27.39% |
+| 60% | 40% | 2,977,251 | 33.33% |
+| 70% | 30% | 3,518,930 | 39.39% |
+
+### Filtering Decision
+
+A minimum site-completeness threshold of **70%** (maximum site missingness of 30%) was selected for subsequent SNP filtering.
+
+This threshold was chosen as a balance between retaining a substantial number of SNPs and reducing missing genotype data. It retains approximately **1.33 million SNPs (14.93%)** from the initial-filtered dataset.
+
+Although the histogram did not reveal a clear natural breakpoint, 70% completeness provides a reasonable working threshold for downstream population genomic analyses.
+
+**Decision:** Apply a minimum site completeness of 70% to the 258-individual dataset.
+
+**Status:** Threshold selected; filtering will be performed in the next step.
 
 ### Table 5. Mean SNP depth among SNPs with ≥70% completeness
 
