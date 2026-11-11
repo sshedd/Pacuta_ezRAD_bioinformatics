@@ -178,8 +178,8 @@ Planned filtering stages:
 
 1.  Initial technical filtering: biallelic SNPs, variant type, allele
     count, depth, and variant quality.
-2.  Examine individual missingness without removing samples.
-3.  Examine per-site missingness and mean sequencing depth.
+2.  Examine individual missingness and remove samples.
+3.  Examine per-site missingness. 
 4.  Apply additional SNP-level quality filters, including allele
     frequency and read-support criteria.
 5.  Evaluate heterozygosity and potentially problematic loci.
@@ -261,6 +261,8 @@ bcftools query -l 01_biallelic_snps.vcf.gz | wc -l
 | 5a | Mean depth among SNPs with ≥70% completeness | Combined site-missingness and mean-depth diagnostic files; no filtering applied | 1,256,391 SNPs assessed | 263 (unchanged) | Not recorded | Complete |
 | 6 | Additional SNP filtering | MAF, site missingness, depth and other quality criteria to be determined | Pending | 263 planned | — | Not started |
 
+### Step 1: Assess Individual Missingness
+
 **Important:** All 263 coral samples are being retained throughout SNP
 filtering. Individual selection will occur after PCA, species
 identification checks, and technical-replicate assessment. Diagnostic
@@ -280,6 +282,99 @@ individuals.
 | 70–90%                     |                       135 |          51.3% |
 | 90% or greater             |                         5 |           1.9% |
 | **Total**                  |                   **263** |       **100%** |
+
+## Individual Missingness Filtering: Removal of Five Individuals
+
+### Rationale
+
+Following a discussion with my advisor, we decided to remove individuals with greater than 90% missing genotype data before continuing site-level SNP filtering. Individuals with extremely high missingness contribute little usable genotype information and may influence the distribution of site missingness across the dataset.
+
+Individual missingness was previously calculated using VCFtools from `02_initial_vcftools.vcf.gz`, which contained **263 individuals and 8,933,146 SNPs**. The resulting `03_individual_missingness.imiss` file was examined to identify individuals with at least 90% missing genotypes.
+
+![Top 20 individuals ranked by missing genotype percentage](08_top20_individual_missingness.png)
+
+### Individuals identified for removal
+
+Five individuals exceeded the missingness threshold:
+
+| Individual | Proportion missing (`F_MISS`) | Percent missing |
+|---|---:|---:|
+| 189_PA01 | 0.914451 | 91.45% |
+| 277_PA012 | 0.993308 | 99.33% |
+| 332_PA012 | 0.912504 | 91.25% |
+| 354_PA01 | 0.999562 | 99.96% |
+| 372_PA01 | 0.950981 | 95.10% |
+
+Two of these individuals (`277_PA012` and `332_PA012`) are technical replicate samples. Their exclusion will be accounted for in subsequent technical replicate analyses.
+
+### Creating the exclusion list
+
+The five sample IDs were saved in `07_high_missingness_samples.txt`:
+
+```bash
+printf '%s\n' \
+  189_PA01 \
+  277_PA012 \
+  332_PA012 \
+  354_PA01 \
+  372_PA01 \
+  > 07_high_missingness_samples.txt
+```
+
+### Removing individuals from the VCF
+
+The five individuals were excluded directly from the initial-filtered VCF using `bcftools`. This avoids modifying the original FASTQ or BAM files or repeating the variant-calling pipeline.
+
+```bash
+bcftools view \
+  -S ^07_high_missingness_samples.txt \
+  -Oz \
+  -o 07_initial_filtered_258ind.vcf.gz \
+  02_initial_vcftools.vcf.gz \
+  2> 07_remove_samples.log
+```
+
+The `-S ^` option instructs `bcftools` to exclude the individuals listed in the text file. The resulting VCF retains the remaining individuals and the original variant records.
+
+The original 263-individual VCF was preserved for reproducibility.
+
+### Input file integrity
+
+An earlier attempt to remove the five individuals from `05_initial_vcftools_renamed.vcf.gz` failed with a BGZF read error, indicating a problem reading the compressed file.
+
+The earlier file, `02_initial_vcftools.vcf.gz`, was subsequently tested:
+
+```bash
+bgzip -t 02_initial_vcftools.vcf.gz
+echo $?
+```
+
+The test returned exit code `0`, indicating that the input passed the BGZF compression integrity check. Therefore, the sample exclusion was redirected to this earlier VCF.
+
+### Verification of the filtered VCF
+
+The expected output contains **258 individuals** and **8,933,146 SNP records**, because this step removes samples without applying additional site-level filters.
+
+The following commands are used to verify the output:
+
+```bash
+bcftools index -t 07_initial_filtered_258ind.vcf.gz
+
+bgzip -t 07_initial_filtered_258ind.vcf.gz
+echo "Integrity test exit code: $?"
+
+bcftools query -l 07_initial_filtered_258ind.vcf.gz | wc -l
+
+bcftools index -n 07_initial_filtered_258ind.vcf.gz
+```
+
+These checks confirm file integrity, the number of retained individuals, and the number of variant records. **Final verification results should be recorded after the commands complete successfully.**
+
+### 1: Assessing site missingness
+
+After confirming the 258-individual VCF, site missingness will be recalculated using VCFtools. The distribution of SNP missingness will then be visualized using histograms with several bin widths (e.g., 0.05, 0.02, 0.01, and 0.005).
+
+The goal is to investigate whether the distribution contains a meaningful break that could help guide the choice of a site-missingness filtering threshold. The threshold will be selected after examining the distribution rather than applying an arbitrary cutoff immediately.
 
 ![](SNP_filtering_analysis_log_files/figure-gfm/individual-missingness-1.png)<!-- -->
 
