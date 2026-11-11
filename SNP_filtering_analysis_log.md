@@ -743,6 +743,373 @@ vcftools \
 
 The filter removed only 0.0015% of SNPs, retaining nearly all markers while excluding the most extreme high-depth outliers.
 
+### Allele-Length Filtering: Removal of Multinucleotide Alleles
+
+Although the initial filtering pipeline selected SNPs using `bcftools -v snps`, additional inspection identified records with reference or alternate alleles longer than one nucleotide.
+
+The VCF header contained an `INFO/LEN` annotation. However, allele lengths were assessed directly from the REF and ALT fields to ensure that only single-nucleotide alleles were retained.
+
+```bash
+# Count records containing alleles longer than one nucleotide
+bcftools view \
+  -i 'strlen(REF)!=1 || strlen(ALT)!=1' \
+  -H 14_maf001_maxmeanDP500.vcf.gz \
+| wc -l
+
+# Remove these records
+bcftools view \
+  -e 'strlen(REF)!=1 || strlen(ALT)!=1' \
+  -Oz \
+  -o 15_maf001_maxmeanDP500_LEN1.vcf.gz \
+  14_maf001_maxmeanDP500.vcf.gz
+
+bcftools index -t 15_maf001_maxmeanDP500_LEN1.vcf.gz
+```
+
+**Filtering results:**
+
+| Metric | Result |
+|---|---:|
+| Input sites | 879,186 |
+| Sites excluded | 39,377 (4.48%) |
+| SNPs retained | 839,809 |
+| Individuals retained | 258 |
+| Remaining records with allele length ≠ 1 | 0 |
+
+**Output:** `15_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+This step ensured that all retained variants were represented as single-nucleotide substitutions, improving compatibility with downstream population genomic and seascape genomic analyses.
+
+## Evaluation of Allele Balance (AB)
+
+Following allele-length filtering, the dataset contained **839,809 SNPs across 258 individuals**.
+
+Allele balance (AB) was examined to assess differences in sequencing-read support between reference and alternate alleles. The FreeBayes `INFO/AB` annotation represents the proportion of reference-supporting reads among reads associated with heterozygous genotype calls.
+
+The ezRAD analysis document recommended the following filtering criterion:
+
+```text
+AB > 0.25 & AB < 0.75 | AB < 0.01
+```
+
+This criterion retains SNPs with intermediate allele balance or values very close to zero.
+
+### Extracting allele balance values
+
+```bash
+bcftools query \
+  -f '%INFO/AB\n' \
+  15_maf001_maxmeanDP500_LEN1.vcf.gz \
+  > 16_allele_balance_values.txt
+```
+
+All 839,809 SNPs had an AB annotation; no missing values were identified.
+
+### Visualizing allele balance
+
+```r
+library(ggplot2)
+
+ab <- read.table(
+  "16_allele_balance_values.txt",
+  header = FALSE,
+  col.names = "AB"
+)
+
+ggplot(ab, aes(x = AB)) +
+  geom_freqpoly(binwidth = 0.02, color = "steelblue") +
+  geom_vline(
+    xintercept = c(0.25, 0.75),
+    linetype = "dashed",
+    color = "red"
+  ) +
+  labs(
+    title = "Allele Balance Distribution",
+    subtitle = "258 individuals | 839,809 SNPs",
+    x = "Allele balance (AB)",
+    y = "Number of SNPs"
+  ) +
+  theme_classic()
+```
+
+![Allele balance distribution](figures/16_allele_balance_distribution.png)
+
+The AB distribution contained a pronounced peak near zero, a broad concentration of SNPs with AB values between approximately 0.15 and 0.25, and a prominent peak around 0.4.
+
+### Evaluating the proposed AB filter
+
+The number of SNPs satisfying the recommended AB criterion was calculated in R:
+
+```r
+pass_ab <- (
+  (ab$AB > 0.25 & ab$AB < 0.75) |
+  ab$AB < 0.01
+)
+
+data.frame(
+  Total_SNPs = nrow(ab),
+  SNPs_Retained = sum(pass_ab),
+  SNPs_Removed = sum(!pass_ab),
+  Percent_Retained = round(mean(pass_ab) * 100, 2)
+)
+```
+
+**Table. Predicted SNP retention under the proposed allele-balance filter.**
+
+| Filtering outcome | SNP count | Percentage |
+|---|---:|---:|
+| SNPs retained | 628,402 | 74.83% |
+| SNPs removed | 211,407 | 25.17% |
+| **Total SNPs** | **839,809** | **100%** |
+
+To determine which AB values accounted for SNP exclusion, the distribution was divided into four categories.
+
+```r
+data.frame(
+  AB_Category = c(
+    "AB < 0.01",
+    "0.01 <= AB <= 0.25",
+    "0.25 < AB < 0.75",
+    "AB >= 0.75"
+  ),
+  SNP_Count = c(
+    sum(ab$AB < 0.01),
+    sum(ab$AB >= 0.01 & ab$AB <= 0.25),
+    sum(ab$AB > 0.25 & ab$AB < 0.75),
+    sum(ab$AB >= 0.75)
+  )
+)
+```
+
+**Table. Distribution of SNPs across allele-balance categories.**
+
+| AB category | SNP count | Percentage | Filter outcome |
+|---|---:|---:|---|
+| AB < 0.01 | 49,923 | 5.94% | Retained |
+| 0.01 ≤ AB ≤ 0.25 | 204,345 | 24.33% | Removed |
+| 0.25 < AB < 0.75 | 578,479 | 68.88% | Retained |
+| AB ≥ 0.75 | 7,062 | 0.84% | Removed |
+| **Total** | **839,809** | **100%** | |
+
+Of the 211,407 SNPs that would fail the proposed filter, approximately 96.7% had AB values between 0.01 and 0.25.
+
+### Interpretation and filtering decision
+
+The proposed AB filter would remove approximately one-quarter of the dataset, primarily SNPs exhibiting low reference-allele read proportions.
+
+Although allele imbalance may indicate mapping bias or genotype-calling artifacts, it is not necessarily evidence of unreliable SNPs. This is particularly relevant for *Pocillopora acuta*, which exhibits mixed sexual and asexual reproduction and may include triploid individuals.
+
+Triploid heterozygotes may exhibit expected allele proportions around 1/3 and 2/3. Furthermore, FreeBayes reports AB as a site-level statistic derived from reads associated with heterozygous calls, rather than as a genotype-specific measure for each individual.
+
+**Decision: AB filtering was deferred.**
+
+Given the substantial predicted SNP loss (25.17%) and uncertainty about the causes of low AB values, the proposed filter was not applied at this stage. Other sequencing and mapping-quality metrics were evaluated before considering whether AB filtering was necessary.
+
+**Current VCF:** `15_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+**SNPs retained:** 839,809
+
+---
+
+## Evaluation of Reference and Alternate Allele Mapping Quality (MQM/MQMR)
+
+Mapping quality was examined to assess the reliability of read alignment supporting reference and alternate alleles.
+
+The FreeBayes VCF contained the following INFO annotations:
+
+- `MQM`: Mean mapping quality of reads supporting alternate alleles.
+- `MQMR`: Mean mapping quality of reads supporting reference alleles.
+
+The ezRAD analysis document recommended:
+
+```text
+MQM > 30 & MQMR > 30 &
+MQM / MQMR > 0.75 &
+MQM / MQMR < 1.25
+```
+
+This filter requires sufficiently high mapping quality for both alleles and limits differences between their mean mapping-quality scores.
+
+### Extracting mapping-quality values
+
+```bash
+bcftools query \
+  -f '%CHROM\t%POS\t%INFO/MQM\t%INFO/MQMR\n' \
+  15_maf001_maxmeanDP500_LEN1.vcf.gz \
+  > 16_mapping_quality_values.tsv
+```
+
+### Importing and summarizing mapping quality in R
+
+```r
+mq <- read.table(
+  "16_mapping_quality_values.tsv",
+  header = FALSE,
+  col.names = c("CHROM", "POS", "MQM", "MQMR"),
+  na.strings = "."
+)
+
+nrow(mq)
+
+summary(mq$MQM)
+summary(mq$MQMR)
+
+mq$MQ_ratio <- mq$MQM / mq$MQMR
+
+summary(mq$MQ_ratio)
+```
+
+All 839,809 SNPs had valid MQM and MQMR annotations, with no missing or zero values.
+
+**Table. Summary statistics for reference and alternate allele mapping quality.**
+
+| Statistic | MQM | MQMR | MQM/MQMR |
+|---|---:|---:|---:|
+| Minimum | 5.000 | 7.158 | 0.1133 |
+| First quartile | 59.750 | 59.426 | 1.0000 |
+| Median | 60.000 | 60.000 | 1.0000 |
+| Mean | 56.160 | 57.088 | 0.9837 |
+| Third quartile | 60.000 | 60.000 | 1.0000 |
+| Maximum | 60.000 | 60.000 | 7.0740 |
+
+Both MQM and MQMR were strongly concentrated around 60, indicating that most reference- and alternate-supporting reads had high mapping-quality scores.
+
+The median mapping-quality ratio was 1.0, indicating similar mean mapping quality between the two alleles at most SNPs.
+
+### Visualizing the mapping-quality ratio
+
+```r
+ggplot(mq, aes(x = MQ_ratio)) +
+  geom_freqpoly(
+    binwidth = 0.02,
+    color = "steelblue"
+  ) +
+  geom_vline(
+    xintercept = c(0.75, 1.25),
+    linetype = "dashed",
+    color = "red"
+  ) +
+  labs(
+    title = "Reference vs. Alternate Mapping Quality",
+    subtitle = "258 individuals | 839,809 SNPs",
+    x = "MQM / MQMR",
+    y = "Number of SNPs"
+  ) +
+  theme_classic()
+```
+
+![Reference vs. alternate mapping quality](figures/16_mapping_quality_ratio.png)
+
+The plot showed a strong peak at MQM/MQMR = 1.0, with relatively few SNPs exhibiting extreme differences in mapping quality between alleles.
+
+### Evaluating the proposed mapping-quality filter
+
+The following criteria were evaluated in R:
+
+```r
+pass_mq <- (
+  mq$MQM > 30 &
+  mq$MQMR > 30 &
+  mq$MQ_ratio > 0.75 &
+  mq$MQ_ratio < 1.25
+)
+
+data.frame(
+  Total_SNPs = nrow(mq),
+  SNPs_Retained = sum(pass_mq),
+  SNPs_Removed = sum(!pass_mq),
+  Percent_Retained = round(mean(pass_mq) * 100, 2)
+)
+```
+
+**Table. Predicted SNP retention under the combined mapping-quality filter.**
+
+| Filtering outcome | SNP count | Percentage |
+|---|---:|---:|
+| SNPs retained | 779,740 | 92.85% |
+| SNPs removed | 60,069 | 7.15% |
+| **Total SNPs** | **839,809** | **100%** |
+
+### Comparing mapping-quality failure categories
+
+To identify which components of the filter caused SNP exclusion, the absolute mapping-quality and mapping-quality ratio requirements were evaluated separately.
+
+```r
+pass_mq30 <- mq$MQM > 30 & mq$MQMR > 30
+
+pass_ratio <- (
+  mq$MQ_ratio > 0.75 &
+  mq$MQ_ratio < 1.25
+)
+
+data.frame(
+  Category = c(
+    "Pass both criteria",
+    "Fail MQ > 30 only",
+    "Fail ratio only",
+    "Fail both criteria"
+  ),
+  SNP_Count = c(
+    sum(pass_mq30 & pass_ratio),
+    sum(!pass_mq30 & pass_ratio),
+    sum(pass_mq30 & !pass_ratio),
+    sum(!pass_mq30 & !pass_ratio)
+  )
+)
+```
+
+**Table. SNP retention and exclusion by mapping-quality criterion.**
+
+| Category | SNP count | Percentage |
+|---|---:|---:|
+| Pass both criteria | 779,740 | 92.85% |
+| Fail MQ > 30 only | 14,452 | 1.72% |
+| Fail MQ ratio only | 23,851 | 2.84% |
+| Fail both criteria | 21,766 | 2.59% |
+| **Total** | **839,809** | **100%** |
+
+Overall:
+
+- 36,218 SNPs failed the minimum mapping-quality requirement.
+- 45,617 SNPs failed the mapping-quality ratio requirement.
+- 21,766 SNPs failed both requirements.
+
+The overlapping failures were counted only once when calculating the total of 60,069 excluded SNPs.
+
+### Interpretation and filtering decision
+
+The mapping-quality results indicated that most SNPs had high-quality alignments and similar mapping-quality scores for reference and alternate alleles.
+
+However, 7.15% of SNPs failed at least one proposed criterion. These SNPs may be more susceptible to ambiguous read alignment or allele-specific mapping bias.
+
+Unlike HWE filtering, mapping-quality filtering evaluates technical properties of sequencing reads and does not require Hardy–Weinberg equilibrium assumptions.
+
+**Decision: Adopt the proposed MQM/MQMR filter.**
+
+The combined criteria were selected to exclude SNPs with low mapping quality or substantial differences in mapping quality between reference- and alternate-supporting reads.
+
+**Expected SNPs retained:** 779,740 (92.85%)
+
+**Expected SNPs removed:** 60,069 (7.15%)
+
+**Status:** Thresholds evaluated and selected; filtering output should be confirmed before recording these as final retained SNP counts.
+
+**Input VCF:** `15_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+### Planned mapping-quality filtering command
+
+```bash
+bcftools view \
+  -i 'INFO/MQM>30 && INFO/MQMR>30 && INFO/MQM/INFO/MQMR>0.75 && INFO/MQM/INFO/MQMR<1.25' \
+  -Oz \
+  -o 17_mapping_quality_filtered.vcf.gz \
+  15_maf001_maxmeanDP500_LEN1.vcf.gz
+```
+
+The output will be indexed and checked for the expected SNP and individual counts before proceeding to paired-read support and QUAL/DP filtering.
+
+
+
 
 ## Summary of Filtering Decisions
 
