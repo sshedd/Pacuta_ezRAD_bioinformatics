@@ -291,7 +291,7 @@ Following a discussion with my advisor, we decided to remove individuals with gr
 
 Individual missingness was previously calculated using VCFtools from `02_initial_vcftools.vcf.gz`, which contained **263 individuals and 8,933,146 SNPs**. The resulting `03_individual_missingness.imiss` file was examined to identify individuals with at least 90% missing genotypes.
 
-![Top 20 individuals ranked by missing genotype percentage](08_top20_individual_missingness.png)
+![Top 20 individuals ranked by missing genotype percentage](figures/08_top20_individual_missingness.png)
 
 ### Individuals identified for removal
 
