@@ -1108,8 +1108,405 @@ bcftools view \
 
 The output will be indexed and checked for the expected SNP and individual counts before proceeding to paired-read support and QUAL/DP filtering.
 
+## Evaluation of Excess Heterozygosity Relative to Minor Allele Frequency
 
+Following mapping-quality filtering, the dataset contained **779,740 SNPs across 258 individuals**.
 
+The next quality-control step evaluated SNPs exhibiting unexpectedly high observed heterozygosity relative to minor allele frequency (MAF). This analysis was recommended in the ezRAD filtering workflow as a way to identify potentially problematic SNPs when conventional Hardy–Weinberg equilibrium (HWE) filtering is not applied.
+
+Conventional HWE filtering was not used because *Pocillopora acuta* exhibits both sexual and asexual reproduction, and some individuals may be triploid. Furthermore, individuals were sampled across multiple locations rather than from a single randomly mating population.
+
+Instead, observed heterozygosity was compared with MAF to investigate potential excess heterozygosity and assess whether an additional SNP filter was justified.
+
+### 1. Calculate MAF and observed heterozygosity
+
+Allele frequencies were calculated using VCFtools:
+
+```bash
+vcftools \
+  --gzvcf 17_mapping_quality_filtered.vcf.gz \
+  --freq \
+  --out 18_heterozygosity_maf
+```
+
+Observed and expected genotype counts were calculated using:
+
+```bash
+vcftools \
+  --gzvcf 17_mapping_quality_filtered.vcf.gz \
+  --hardy \
+  --out 18_heterozygosity_hwe
+```
+
+The `--hardy` command was used only to calculate genotype statistics. **No HWE significance-based filtering was performed.**
+
+Both commands processed all 779,740 SNPs and 258 individuals.
+
+### 2. Calculate observed heterozygosity in R
+
+```r
+library(ggplot2)
+library(dplyr)
+
+freq <- read.table(
+  "18_heterozygosity_maf.frq",
+  header = FALSE,
+  skip = 1,
+  col.names = c(
+    "CHROM", "POS", "N_ALLELES",
+    "N_CHR", "FREQ1", "FREQ2"
+  )
+)
+
+freq$FREQ1 <- as.numeric(sub(".*:", "", freq$FREQ1))
+freq$FREQ2 <- as.numeric(sub(".*:", "", freq$FREQ2))
+
+freq$MAF <- pmin(freq$FREQ1, freq$FREQ2)
+
+het <- read.table(
+  "18_heterozygosity_hwe.hwe",
+  header = TRUE,
+  check.names = FALSE
+)
+
+obs <- strsplit(
+  het[["OBS(HOM1/HET/HOM2)"]],
+  "/"
+)
+
+obs <- do.call(rbind, obs)
+storage.mode(obs) <- "numeric"
+
+het$N_HOM1 <- obs[, 1]
+het$N_HET <- obs[, 2]
+het$N_HOM2 <- obs[, 3]
+
+het$N_CALLED <- het$N_HOM1 + het$N_HET + het$N_HOM2
+
+het$FHET_OBS <- het$N_HET / het$N_CALLED
+
+het_maf <- merge(
+  freq[, c("CHROM", "POS", "MAF")],
+  het[, c("CHR", "POS", "FHET_OBS")],
+  by.x = c("CHROM", "POS"),
+  by.y = c("CHR", "POS")
+)
+```
+
+The resulting dataset contained **779,740 SNPs**, with no missing MAF or observed heterozygosity values. All MAF values were between 0.01 and 0.50.
+
+**Table. Summary statistics for MAF and observed heterozygosity.**
+
+| Statistic | MAF | Observed heterozygosity |
+|---|---:|---:|
+| Minimum | 0.0100 | 0.0000 |
+| First quartile | 0.0228 | 0.0338 |
+| Median | 0.0774 | 0.1321 |
+| Mean | 0.1291 | 0.2083 |
+| Third quartile | 0.2053 | 0.3550 |
+| Maximum | 0.5000 | 0.9961 |
+
+### 3. Visualize observed heterozygosity against MAF
+
+Observed heterozygosity was plotted against MAF to investigate whether SNPs formed distinct groups with unusually high heterozygosity.
+
+For diploid, biallelic loci, expected heterozygosity under HWE is:
+
+\[
+H_E = 2p(1-p)
+\]
+
+where \(p\) is MAF.
+
+The maximum possible observed heterozygosity is:
+
+\[
+H_{O,\max} = 2p
+\]
+
+for \(0 \leq p \leq 0.5\).
+
+The fin plot included both theoretical curves and horizontal reference lines representing candidate observed heterozygosity thresholds.
+
+```r
+ggplot(het_maf, aes(x = MAF, y = FHET_OBS)) +
+  geom_point(
+    alpha = 0.08,
+    size = 0.25,
+    color = "steelblue"
+  ) +
+  stat_function(
+    fun = function(x) 2 * x * (1 - x),
+    color = "red",
+    linewidth = 0.8
+  ) +
+  stat_function(
+    fun = function(x) 2 * x,
+    color = "darkorange",
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+  geom_hline(
+    yintercept = c(0.40, 0.50, 0.60, 0.70),
+    color = c("purple", "darkgreen", "brown", "black"),
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+  annotate(
+    "label",
+    x = 0.08,
+    y = c(0.40, 0.50, 0.60, 0.70),
+    label = c(
+      "FHET = 0.40",
+      "FHET = 0.50",
+      "FHET = 0.60",
+      "FHET = 0.70"
+    ),
+    color = c("purple", "darkgreen", "brown", "black"),
+    fill = "white",
+    size = 3.5,
+    hjust = 0
+  ) +
+  coord_cartesian(
+    xlim = c(0, 0.5),
+    ylim = c(0, 1)
+  ) +
+  labs(
+    title = "Observed Heterozygosity vs. Minor Allele Frequency",
+    subtitle = "258 individuals | 779,740 SNPs",
+    x = "Minor allele frequency (MAF)",
+    y = "Observed heterozygote frequency"
+  ) +
+  theme_classic()
+
+ggsave(
+  "18_maf_vs_heterozygosity_cutoff_comparison.png",
+  width = 10,
+  height = 7,
+  dpi = 300
+)
+```
+
+![Observed heterozygosity versus minor allele frequency with candidate filtering thresholds](figures/18_maf_vs_heterozygosity_cutoff_comparison.png)
+
+The fin plot showed a continuous distribution of SNPs bounded by the theoretical maximum observed heterozygosity. Many SNPs exhibited heterozygosity above the HWE expectation, although no clearly separated group of extreme SNPs was apparent.
+
+A reduction in SNP density was visually apparent toward higher heterozygosity values, motivating comparison of several candidate thresholds rather than automatically applying the example cutoff of 0.40 from the ezRAD workflow.
+
+### 4. Evaluate heterozygosity excess relative to HWE expectations
+
+Heterozygosity excess was calculated as the difference between observed and expected heterozygosity:
+
+\[
+H_{\text{excess}} = H_O - H_E
+\]
+
+```r
+het_maf$FHET_EXP <- 2 * het_maf$MAF * (1 - het_maf$MAF)
+
+het_maf$HET_EXCESS <- (
+  het_maf$FHET_OBS - het_maf$FHET_EXP
+)
+
+summary(het_maf$HET_EXCESS)
+```
+
+**Table. Summary statistics for heterozygosity excess.**
+
+| Statistic | Heterozygosity excess |
+|---|---:|
+| Minimum | -0.426170 |
+| First quartile | -0.018504 |
+| Median | 0.001087 |
+| Mean | 0.016339 |
+| Third quartile | 0.029882 |
+| Maximum | 0.496117 |
+
+The median heterozygosity excess was close to zero, indicating that the typical SNP had observed heterozygosity close to the pooled HWE expectation. The slightly positive mean indicated an overall tendency toward heterozygote excess.
+
+The number of SNPs exceeding different levels of heterozygosity excess was then calculated:
+
+```r
+thresholds <- c(0, 0.05, 0.10, 0.15, 0.20, 0.25)
+
+data.frame(
+  Excess_Threshold = thresholds,
+  SNPs_Above = sapply(
+    thresholds,
+    function(x) sum(het_maf$HET_EXCESS > x)
+  ),
+  Percent_Above = round(
+    sapply(
+      thresholds,
+      function(x) mean(het_maf$HET_EXCESS > x) * 100
+    ),
+    2
+  )
+)
+```
+
+**Table. SNPs exceeding different heterozygosity-excess thresholds.**
+
+| Excess threshold | SNPs above threshold | Percentage |
+|---|---:|---:|
+| > 0.00 | 457,292 | 58.65% |
+| > 0.05 | 150,491 | 19.30% |
+| > 0.10 | 78,295 | 10.04% |
+| > 0.15 | 38,335 | 4.92% |
+| > 0.20 | 18,693 | 2.40% |
+| > 0.25 | 8,937 | 1.15% |
+
+Although 58.65% of SNPs exhibited positive heterozygosity excess, only 1.15% exceeded the HWE expectation by more than 0.25.
+
+The gradual decline in SNP counts across these thresholds did not indicate a clear natural breakpoint.
+
+### 5. Compare candidate observed heterozygosity cutoffs
+
+Several absolute observed heterozygosity cutoffs were evaluated to quantify their effects on SNP retention.
+
+```r
+cutoffs <- c(0.60, 0.65, 0.70, 0.75, 0.80)
+
+het_comparison <- data.frame(
+  FHET_Cutoff = cutoffs,
+  SNPs_Removed = sapply(
+    cutoffs,
+    function(x) sum(het_maf$FHET_OBS > x)
+  ),
+  SNPs_Retained = sapply(
+    cutoffs,
+    function(x) sum(het_maf$FHET_OBS <= x)
+  ),
+  Percent_Removed = round(
+    sapply(
+      cutoffs,
+      function(x) mean(het_maf$FHET_OBS > x) * 100
+    ),
+    2
+  )
+)
+
+print(het_comparison)
+```
+![Observed heterozygosity versus minor allele frequency with candidate filtering thresholds](figures/18_maf_vs_heterozygosity_cutoff_comparison.png)
+
+**Table. Expected SNP retention under alternative observed heterozygosity thresholds.**
+
+| FHET cutoff | SNPs removed | SNPs retained | Percentage removed |
+|---|---:|---:|---:|
+| 0.60 | 41,358 | 738,382 | 5.30% |
+| 0.65 | 24,828 | 754,912 | 3.18% |
+| 0.70 | 13,645 | 766,095 | 1.75% |
+| 0.75 | 7,156 | 772,584 | 0.92% |
+| 0.80 | 3,762 | 775,978 | 0.48% |
+
+An FHET cutoff of 0.70 would remove 13,645 SNPs (1.75%), whereas a cutoff of 0.60 would remove 41,358 SNPs (5.30%).
+
+Absolute heterozygosity thresholds were interpreted cautiously because the maximum possible observed heterozygosity depends on MAF. For example, an FHET cutoff of 0.70 can only exclude diploid biallelic SNPs with MAF above approximately 0.35.
+
+### 6. Investigate the relationship between heterozygosity and sequencing depth
+
+High observed heterozygosity can sometimes result from reads originating from duplicated genomic regions that align to the same reference position.
+
+Such loci may also exhibit elevated sequencing depth. Therefore, mean depth was compared between SNPs exhibiting extreme heterozygosity excess and the remaining SNPs.
+
+Site mean depth was calculated using:
+
+```bash
+vcftools \
+  --gzvcf 17_mapping_quality_filtered.vcf.gz \
+  --site-mean-depth \
+  --out 18_heterozygosity_depth
+```
+
+Depth values were matched to the heterozygosity dataset by chromosome and position.
+
+```r
+depth <- read.table(
+  "18_heterozygosity_depth.ldepth.mean",
+  header = TRUE
+)
+
+het_depth <- merge(
+  het_maf,
+  depth[, c("CHROM", "POS", "MEAN_DEPTH")],
+  by = c("CHROM", "POS")
+)
+
+het_depth$HET_GROUP <- ifelse(
+  het_depth$HET_EXCESS > 0.25,
+  "Extreme excess (>0.25)",
+  "Other SNPs"
+)
+
+aggregate(
+  MEAN_DEPTH ~ HET_GROUP,
+  data = het_depth,
+  FUN = median
+)
+```
+
+All 779,740 SNPs were successfully matched.
+
+**Table. Median mean sequencing depth by heterozygosity-excess category.**
+
+| SNP category | Median mean depth |
+|---|---:|
+| Extreme heterozygosity excess (>0.25) | 13.8415 |
+| Other SNPs | 9.8996 |
+
+SNPs exhibiting extreme heterozygosity excess had approximately 40% higher median mean depth than other SNPs.
+
+Depth was also compared specifically for SNPs above and below an observed heterozygosity threshold of 0.70.
+
+```r
+het_depth$FHET_GROUP <- ifelse(
+  het_depth$FHET_OBS > 0.70,
+  "Above 0.70",
+  "At or below 0.70"
+)
+
+aggregate(
+  MEAN_DEPTH ~ FHET_GROUP,
+  data = het_depth,
+  FUN = median
+)
+```
+
+**Table. Median mean sequencing depth above and below FHET = 0.70.**
+
+| SNP category | Median mean depth |
+|---|---:|
+| FHET > 0.70 | 12.2913 |
+| FHET ≤ 0.70 | 9.8943 |
+
+SNPs above the proposed FHET threshold of 0.70 had approximately 24% higher median sequencing depth than those below it.
+
+These results are consistent with the possibility that some high-heterozygosity SNPs originate from duplicated or ambiguously mapped regions. However, elevated depth is not sufficient to establish that these SNPs are erroneous.
+
+### 7. Interpretation and filtering decision
+
+The heterozygosity analysis identified a broad, continuous distribution of SNPs, including a subset exhibiting substantial heterozygote excess.
+
+Several considerations affect interpretation:
+
+- *Pocillopora acuta* reproduces sexually and asexually, and clonality may influence genotype frequencies.
+- Some individuals may be triploid, complicating interpretation of diploid genotype calls.
+- The dataset contains individuals sampled across multiple geographic locations rather than a single randomly mating population.
+- Excess heterozygosity and elevated depth may indicate duplicated genomic regions or mapping artifacts, but are not definitive evidence of technical error.
+- Absolute FHET cutoffs preferentially exclude common SNPs because the maximum possible heterozygosity increases with MAF.
+
+The comparison of candidate cutoffs showed that moderate-to-high FHET thresholds could exclude a relatively small subset of SNPs. However, the fin plot and heterozygosity-excess distribution did not establish a unique, biologically justified threshold.
+
+**Filtering decision: Pending.**
+
+No heterozygosity-based SNP filter has yet been applied. The diagnostic results will be used to select an appropriate threshold, if warranted, before proceeding to subsequent quality-control steps.
+
+**Current working VCF:** `17_mapping_quality_filtered.vcf.gz`
+
+**Current SNP count:** 779,740
+
+**Current individual count:** 258
 
 ## Summary of Filtering Decisions
 
