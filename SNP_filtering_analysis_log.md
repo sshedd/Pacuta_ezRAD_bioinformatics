@@ -1311,6 +1311,7 @@ het_comparison <- data.frame(
 
 print(het_comparison)
 ```
+
 ![Observed heterozygosity versus minor allele frequency with candidate filtering thresholds](figures/18_maf_vs_heterozygosity_cutoff_comparison.png)
 
 **Table. Expected SNP retention under alternative observed heterozygosity thresholds.**
