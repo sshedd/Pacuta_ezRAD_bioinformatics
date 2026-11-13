@@ -959,7 +959,7 @@ mq$MQ_ratio <- mq$MQM / mq$MQMR
 summary(mq$MQ_ratio)
 ```
 
-All 839,809 SNPs had valid MQM and MQMR annotations, with no missing or zero values.
+All 628,402 SNPs had valid MQM and MQMR annotations, with no missing or zero values.
 
 **Table. Summary statistics for reference and alternate allele mapping quality.**
 
@@ -998,7 +998,7 @@ ggplot(mq, aes(x = MQ_ratio)) +
   theme_classic()
 ```
 
-![Reference vs. alternate mapping quality](figures/16_mapping_quality_ratio.png)
+![Mapping quality ratio after allele-balance filtering](figures/17_mapping_quality_ratio.png)
 
 The plot showed a strong peak at MQM/MQMR = 1.0, with relatively few SNPs exhibiting extreme differences in mapping quality between alleles.
 
