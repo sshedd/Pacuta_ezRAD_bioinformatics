@@ -2,95 +2,6 @@ SNP Filtering Analysis Log
 ================
 2026-10-27
 
-- [SNP Filtering Analysis Log](#snp-filtering-analysis-log)
-  - [Project: *Pocillopora acuta* ezRAD Seascape
-    Genomics](#project-pocillopora-acuta-ezrad-seascape-genomics)
-  - [1. Objective](#1-objective)
-  - [2. Starting Dataset](#2-starting-dataset)
-  - [3. Software](#3-software)
-  - [4. Working Directory](#4-working-directory)
-  - [5. Filtering Strategy](#5-filtering-strategy)
-  - [6. Initial SNP Filtering —
-    BCFtools](#6-initial-snp-filtering--bcftools)
-    - [Purpose](#purpose)
-    - [Command](#command)
-    - [Verification commands](#verification-commands)
-  - [7. Next Filtering Stage —
-    VCFtools](#7-next-filtering-stage--vcftools)
-  - [8. Filtering Results Summary](#8-filtering-results-summary)
-    - [Table 1. SNP filtering and quality-control
-      summary](#table-1-snp-filtering-and-quality-control-summary)
-    - [Table 2. Individual missingness
-      distribution](#table-2-individual-missingness-distribution)
-    - [Table 3. SNP completeness and potential retention
-      thresholds](#table-3-snp-completeness-and-potential-retention-thresholds)
-    - [Table 4. Mean SNP depth
-      distribution](#table-4-mean-snp-depth-distribution)
-    - [Table 5. Mean SNP depth among SNPs with ≥70%
-      completeness](#table-5-mean-snp-depth-among-snps-with-70-completeness)
-    - [Table 6. Output files generated](#table-6-output-files-generated)
-  - [9. Additional Mean-Depth
-    Assessment](#9-additional-mean-depth-assessment)
-    - [9.1 Purpose](#91-purpose)
-    - [Table 7. Upper-depth tail among SNPs with ≥70%
-      completeness](#table-7-upper-depth-tail-among-snps-with-70-completeness)
-  - [10. FreeBayes Mapping-Quality
-    Assessment](#10-freebayes-mapping-quality-assessment)
-    - [10.1 Purpose](#101-purpose)
-    - [10.2 Mapping quality across all initially filtered
-      SNPs](#102-mapping-quality-across-all-initially-filtered-snps)
-    - [Table 8. Alternate-allele mapping quality across all
-      SNPs](#table-8-alternate-allele-mapping-quality-across-all-snps)
-    - [10.3 Mapping quality among SNPs with ≥70%
-      completeness](#103-mapping-quality-among-snps-with-70-completeness)
-    - [Table 9. Alternate-allele mapping quality among
-      higher-completeness
-      SNPs](#table-9-alternate-allele-mapping-quality-among-higher-completeness-snps)
-    - [10.4 Comparing reference and alternate mapping
-      quality](#104-comparing-reference-and-alternate-mapping-quality)
-    - [Table 10. SNP retention under alternative mapping-quality
-      thresholds](#table-10-snp-retention-under-alternative-mapping-quality-thresholds)
-    - [10.5 Mapping-quality filtering
-      decision](#105-mapping-quality-filtering-decision)
-  - [11. Allele-Balance Assessment](#11-allele-balance-assessment)
-    - [11.1 Purpose](#111-purpose)
-    - [11.2 Allele-balance
-      distribution](#112-allele-balance-distribution)
-    - [Table 11. FreeBayes allele-balance
-      distribution](#table-11-freebayes-allele-balance-distribution)
-    - [11.3 Investigating SNPs with very low allele
-      balance](#113-investigating-snps-with-very-low-allele-balance)
-    - [Table 12. Heterozygous genotype counts among SNPs with AB
-      \<0.1](#table-12-heterozygous-genotype-counts-among-snps-with-ab-01)
-    - [11.4 Allele-balance filtering
-      decision](#114-allele-balance-filtering-decision)
-  - [12. Properly Paired Read
-    Assessment](#12-properly-paired-read-assessment)
-    - [12.1 Purpose](#121-purpose)
-    - [12.2 Results](#122-results)
-    - [Table 13. Properly paired read
-      support](#table-13-properly-paired-read-support)
-    - [12.3 Paired-read filtering
-      decision](#123-paired-read-filtering-decision)
-  - [13. Combined Candidate-Filter
-    Assessment](#13-combined-candidate-filter-assessment)
-    - [13.1 Purpose](#131-purpose)
-    - [Table 14. Combined projected SNP
-      retention](#table-14-combined-projected-snp-retention)
-    - [13.2 Visualizing the combined filtering
-      results](#132-visualizing-the-combined-filtering-results)
-    - [13.3 Candidate filtering
-      decision](#133-candidate-filtering-decision)
-  - [14. Additional Visual Summaries](#14-additional-visual-summaries)
-    - [Figure 6. Individual missingness across all 263
-      samples](#figure-6-individual-missingness-across-all-263-samples)
-    - [Figure 7. SNP retention by minimum sample
-      completeness](#figure-7-snp-retention-by-minimum-sample-completeness)
-  - [15. Updated SNP Filtering Decision
-    Summary](#15-updated-snp-filtering-decision-summary)
-  - [16. Reproducibility Notes](#16-reproducibility-notes)
-  - [17. Next Planned Analyses](#17-next-planned-analyses)
-
 # SNP Filtering Analysis Log
 
 ## Project: *Pocillopora acuta* ezRAD Seascape Genomics
@@ -191,7 +102,7 @@ bcftools view \
 | 5a | Mean depth among SNPs with ≥70% completeness | Combined site-missingness and mean-depth diagnostic files; no filtering applied | 1,256,391 SNPs assessed | 263 (unchanged) | Not recorded | Complete |
 | 6 | Additional SNP filtering | MAF, site missingness, depth and other quality criteria to be determined | Pending | 263 planned | — | Not started |
 
-### Step 1: Assess Individual Missingness
+### 2. Assess Individual Missingness
 
 **Important:** All 263 coral samples are being retained throughout SNP
 filtering. Individual selection will occur after PCA, species
