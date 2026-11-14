@@ -42,3 +42,17 @@ Five individuals exceeded the missingness threshold:
 | 354_PA01 | 0.999562 | 99.96% |
 | 372_PA01 | 0.950981 | 95.10% |
 
+Removing individuals from the VCF
+The five individuals were excluded directly from the initial-filtered VCF using bcftools. This avoids modifying the original FASTQ or BAM files or repeating the variant-calling pipeline.
+
+```
+bcftools view \
+  -S ^07_high_missingness_samples.txt \
+  -Oz \
+  -o 07_initial_filtered_258ind.vcf.gz \
+  02_initial_vcftools.vcf.gz \
+  2> 07_remove_samples.log
+```
+The -S ^ option instructs bcftools to exclude the individuals listed in the text file. The resulting VCF retains the remaining individuals and the original variant records.
+
+
