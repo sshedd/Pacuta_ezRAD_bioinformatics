@@ -1,10 +1,4 @@
-### 2: Assessing site missingness
-
-## Site Missingness Analysis Following Individual Filtering
-
-### Objective
-
-Following the removal of five individuals with greater than 90% missing genotype data, site missingness was recalculated to evaluate the distribution of missing genotypes across SNPs and select an appropriate site-completeness threshold.
+### 4: Assessing site missingness
 
 The updated dataset contained **258 individuals and 8,933,146 SNPs**.
 
@@ -16,17 +10,14 @@ Site missingness was calculated using VCFtools:
 vcftools \
   --gzvcf 07_initial_filtered_258ind.vcf.gz \
   --missing-site \
-  --out 08_site_missingness_258ind
+  --out 04_site_missingness_258ind
 ```
 
-The resulting `08_site_missingness_258ind.lmiss` file contained the proportion of missing genotypes (`F_MISS`) at each SNP.
-
-VCFtools confirmed that 258 individuals and 8,933,146 sites were included in the analysis.
+The resulting `04_site_missingness_258ind.lmiss` file contained the proportion of missing genotypes (`F_MISS`) at each SNP.
 
 ### Visualizing the Distribution
 
-![Site missingness histogram after removing five individuals](figures/08_site_missingness_258ind.png)
-
+![Site missingness histogram after removing five individuals](figures/04_site_missingness_258ind.png)
 
 | Maximum site missingness | Minimum completeness | SNPs retained | Percentage retained |
 |---|---|---:|---:|
@@ -42,4 +33,4 @@ VCFtools confirmed that 258 individuals and 8,933,146 sites were included in the
 
 A minimum site-completeness threshold of **70%** (maximum site missingness of 30%) was selected for subsequent SNP filtering.
 
-This threshold was chosen as a balance between retaining a substantial number of SNPs and reducing missing genotype data. It retains approximately **1.33 million SNPs (14.93%)** from the initial-filtered dataset.
+This threshold was chosen as a balance between retaining a substantial number of SNPs and reducing missing genotype data. It retains approximately **1.33 million SNPs (14.93%)** from the initial-filtered dataset. At 70%, the slope began to change, so it seemed like an appropriate threshold. 
