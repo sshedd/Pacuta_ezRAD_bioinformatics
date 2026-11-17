@@ -96,7 +96,7 @@ Apply the selected ezRAD allele-balance criterion, retaining 628,402 SNPs for su
 **Final SNP count:** **628,402**
 
 
-#### CHANGE TO 0.2 and 0.8 as Maddie recommended
+#### CHANGE TO 0.3 and 0.75 as Maddie recommended
 
 ## Look at SNPs between 0.01 and 0.25 and then look at all the SNPs at the second peak and compare the individuals present 
 
