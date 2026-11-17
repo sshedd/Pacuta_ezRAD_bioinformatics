@@ -175,3 +175,5 @@ No final observed heterozygote-frequency cutoff has yet been selected or applied
 **Current individual count:** **258**
 
 **Status:** Heterozygosity assessment completed; filtering decision pending further evaluation.
+
+## Maddie recommends using 0.75 as that is where the curve asymptotes. 
