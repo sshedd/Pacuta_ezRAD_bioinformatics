@@ -100,6 +100,10 @@ Apply the selected ezRAD allele-balance criterion, retaining 628,402 SNPs for su
 
 ## Look at SNPs between 0.01 and 0.25 and then look at all the SNPs at the second peak and compare the individuals present 
 
+## Make two different files of each vcf filtered for 05AB and 0.3AB and then look at missingness in each one 
+
+#Look at which individuals are called at those sites vs which ones are missing 
+
 **Final individual count:** **258**
 
 **Next step:** Assess and filter mapping quality.
