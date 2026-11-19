@@ -102,6 +102,54 @@ Apply the selected ezRAD allele-balance criterion, retaining 628,402 SNPs for su
 
 ## Make two different files of each vcf filtered for 05AB and 0.3AB and then look at missingness in each one 
 
+## 10.3. Apply revised allele-balance filtering
+
+Following consultation with Maddie, the lower allele-balance threshold was increased from **0.25 to 0.30**, based on a clear break observed in the allele-balance distribution.
+
+The upper threshold was retained at **0.75**. The original exception for `AB < 0.01` was also retained.
+
+The revised filtering criterion was:
+
+```text
+(AB > 0.30 AND AB < 0.75) OR AB < 0.01
+```
+
+The filter was applied using:
+
+```bash
+bcftools view \
+  -i '(INFO/AB>0.30 && INFO/AB<0.75) || INFO/AB<0.01' \
+  -Oz \
+  -o 10_allele_balance_filtered_AB030.vcf.gz \
+  09_maf001_maxmeanDP500_LEN1.vcf.gz
+
+bcftools index -t 10_allele_balance_filtered_AB030.vcf.gz
+```
+
+**Input VCF:** `09_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+**Input SNP count:** 839,809
+
+**Individuals:** 258
+
+**Revised SNP count:** Pending confirmation.
+
+## 10.4. Filtering decision - **REVISED - INFO BELOW**
+
+The revised allele-balance filtering threshold was selected following examination of the allele-balance distribution and discussion with Maddie.
+
+The lower threshold was increased to **0.30** to exclude additional SNPs exhibiting allele imbalance, while retaining the original upper threshold of **0.75**.
+
+The `AB < 0.01` exception remains part of the filtering criterion and should be evaluated separately if its biological justification is reconsidered.
+
+**Final output:** `10_allele_balance_filtered_AB030.vcf.gz`
+
+**Final SNP count:** Pending confirmation.
+
+**Final individual count:** 258
+
+**Next step:** Reapply mapping-quality filtering to the revised allele-balance-filtered VCF.
+
 #Look at which individuals are called at those sites vs which ones are missing 
 
 **Final individual count:** **258**
