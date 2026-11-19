@@ -87,7 +87,7 @@ bcftools index -t 10_allele_balance_filtered.vcf.gz
 
 The retained SNP count was confirmed as **628,402**, with **258 individuals** remaining.
 
-## 10.4. Filtering decision
+## 10.4. Filtering decision - **REVISED - INFO BELOW**
 
 Apply the selected ezRAD allele-balance criterion, retaining 628,402 SNPs for subsequent mapping-quality filtering.
 
@@ -134,7 +134,7 @@ bcftools index -t 10_allele_balance_filtered_AB030.vcf.gz
 
 **Revised SNP count:** Pending confirmation.
 
-## 10.4. Filtering decision - **REVISED - INFO BELOW**
+## 10.4. Filtering decision -
 
 The revised allele-balance filtering threshold was selected following examination of the allele-balance distribution and discussion with Maddie.
 
