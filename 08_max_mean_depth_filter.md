@@ -38,3 +38,78 @@ A maximum mean site depth threshold of 500× was retained because it removed exc
 **Final output:** `08_maf001_maxmeanDP500.vcf.gz`
 
 **Next step:** Remove records containing reference or alternate alleles longer than one nucleotide.
+
+## REVISED 
+
+# 08. Maximum Mean Site Depth Filtering (500×)
+
+## Objective
+
+A maximum mean site depth threshold of **500×** was applied to remove SNPs with exceptionally high sequencing coverage.
+
+Extremely high coverage may indicate repetitive genomic regions, collapsed paralogs, or mapping artifacts.
+
+The same threshold was applied independently to the Neutral and Adaptive datasets.
+
+## Filtering criterion
+
+**Maximum mean site depth: 500×**
+
+No additional minimum mean site depth filter was applied.
+
+## Neutral dataset
+
+**Input:** `Neutral_MAF005/Neutral_07_global_maf005.vcf.gz`
+
+```bash
+vcftools \
+  --gzvcf Neutral_MAF005/Neutral_07_global_maf005.vcf.gz \
+  --max-meanDP 500 \
+  --recode \
+  --recode-INFO-all \
+  --stdout \
+  2> Neutral_MAF005/Neutral_08_max_meanDP500.log \
+| bgzip -c > Neutral_MAF005/Neutral_08_maf005_maxmeanDP500.vcf.gz
+
+bcftools index -t \
+  Neutral_MAF005/Neutral_08_maf005_maxmeanDP500.vcf.gz
+```
+
+## Adaptive dataset
+
+**Input:** `Adaptive_MAF001/Adaptive_07_global_maf001.vcf.gz`
+
+```bash
+vcftools \
+  --gzvcf Adaptive_MAF001/Adaptive_07_global_maf001.vcf.gz \
+  --max-meanDP 500 \
+  --recode \
+  --recode-INFO-all \
+  --stdout \
+  2> Adaptive_MAF001/Adaptive_08_max_meanDP500.log \
+| bgzip -c > Adaptive_MAF001/Adaptive_08_maf001_maxmeanDP500.vcf.gz
+
+bcftools index -t \
+  Adaptive_MAF001/Adaptive_08_maf001_maxmeanDP500.vcf.gz
+```
+
+## Filtering results
+
+| Dataset | Input SNPs | SNPs removed | SNPs retained | Individuals |
+|---|---:|---:|---:|---:|
+| Neutral | 536,457 | **9** | **536,448** | 258 |
+| Adaptive | 879,199 | **13** | **879,186** | 258 |
+
+## Interpretation
+
+Only a small number of SNPs exceeded the maximum mean depth threshold in either dataset.
+
+The filter removed extreme high-depth outliers without substantially reducing SNP retention.
+
+## Final outputs
+
+**Neutral:** `Neutral_MAF005/Neutral_08_maf005_maxmeanDP500.vcf.gz`
+
+**Adaptive:** `Adaptive_MAF001/Adaptive_08_maf001_maxmeanDP500.vcf.gz`
+
+**Next step:** Remove records containing multibase alleles.
