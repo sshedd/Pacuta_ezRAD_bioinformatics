@@ -155,3 +155,76 @@ The `AB < 0.01` exception remains part of the filtering criterion and should be 
 **Final individual count:** **258**
 
 **Next step:** Assess and filter mapping quality.
+
+## REVISED 
+
+# 09. Single-Base Allele Filtering
+
+## Objective
+
+This filtering step removed VCF records containing reference or alternate alleles longer than one nucleotide.
+
+Although the original pipeline selected SNPs, additional records with multibase alleles remained.
+
+To ensure that downstream analyses used only single-nucleotide substitutions, the lengths of the REF and ALT alleles were evaluated directly.
+
+## Filtering criterion
+
+Retain records satisfying:
+
+```text
+strlen(REF) == 1 AND strlen(ALT) == 1
+```
+
+## Neutral dataset
+
+**Input:** `Neutral_MAF005/Neutral_08_maf005_maxmeanDP500.vcf.gz`
+
+```bash
+bcftools view \
+  -e 'strlen(REF)!=1 || strlen(ALT)!=1' \
+  -Oz \
+  -o Neutral_MAF005/Neutral_09_maf005_maxmeanDP500_LEN1.vcf.gz \
+  Neutral_MAF005/Neutral_08_maf005_maxmeanDP500.vcf.gz
+
+bcftools index -t \
+  Neutral_MAF005/Neutral_09_maf005_maxmeanDP500_LEN1.vcf.gz
+```
+
+## Adaptive dataset
+
+**Input:** `Adaptive_MAF001/Adaptive_08_maf001_maxmeanDP500.vcf.gz`
+
+```bash
+bcftools view \
+  -e 'strlen(REF)!=1 || strlen(ALT)!=1' \
+  -Oz \
+  -o Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz \
+  Adaptive_MAF001/Adaptive_08_maf001_maxmeanDP500.vcf.gz
+
+bcftools index -t \
+  Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz
+```
+
+## Filtering results
+
+| Dataset | Input SNPs | SNPs removed | SNPs retained | Percentage removed |
+|---|---:|---:|---:|---:|
+| Neutral | 536,448 | **35,149** | **501,299** | 6.55% |
+| Adaptive | 879,186 | **39,377** | **839,809** | 4.48% |
+
+Both datasets retained **258 individuals**.
+
+## Interpretation
+
+The filter excluded records with multibase alleles, producing datasets containing only single-base REF and ALT alleles.
+
+This standardizes variant representation for downstream population genomic analyses.
+
+## Final outputs
+
+**Neutral:** `Neutral_MAF005/Neutral_09_maf005_maxmeanDP500_LEN1.vcf.gz`
+
+**Adaptive:** `Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+**Next step:** Revised allele-balance filtering.
