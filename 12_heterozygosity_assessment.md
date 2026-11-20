@@ -182,10 +182,6 @@ No final observed heterozygote-frequency cutoff has yet been selected or applied
 
 # 12. Heterozygosity Assessment and Filtering
 
-## Objective
-
-Observed heterozygote frequency (FHET) was assessed to identify and remove SNPs with unusually high proportions of heterozygous genotype calls.
-
 Excessively high heterozygosity may indicate collapsed paralogous regions, repetitive sequences, or genotyping artifacts. However, elevated heterozygosity may also reflect genuine biological variation in *Pocillopora acuta*, including clonality and potential ploidy variation.
 
 Separate heterozygosity thresholds were selected for the Neutral and Adaptive datasets.
@@ -245,12 +241,6 @@ FHET = HET / (HOM1 + HET + HOM2)
 Missing genotypes were excluded from the denominator.
 
 Minor allele frequency was calculated as the smaller of the two allele frequencies reported for each biallelic locus.
-
-The R analysis was performed using:
-
-```bash
-Rscript 12_heterozygosity_comparison.R \
-  > 12_heterozygosity_comparison.log 2>&1
 ```
 
 The script produced per-SNP diagnostic tables and separate MAF-versus-heterozygosity plots for both datasets.
