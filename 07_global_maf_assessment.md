@@ -131,3 +131,92 @@ The original filtering command was not included in the available notes. It shoul
 **Final output:** `07_global_maf001.vcf.gz`
 
 **Next step:** Apply a maximum mean site depth threshold of 500×.
+
+## REVISION
+
+# 07. Global Minor Allele Frequency (MAF) Assessment and Dataset Separation
+
+## Objective
+
+Global minor allele frequency (MAF) filtering was used to exclude rare variants and establish two parallel SNP datasets for downstream population genomic and seascape genomic analyses of *Pocillopora acuta*.
+
+Because sampling consisted of approximately 1–2 individuals per sampling site, allele frequencies were calculated globally across the 258 retained individuals rather than independently by sampling site.
+
+## Input dataset
+
+**Input VCF:** `05_site70_mac2.vcf.gz`
+
+- SNPs: **1,332,396**
+- Individuals: **258**
+
+## Initial MAF assessment
+
+Four candidate global MAF thresholds were compared.
+
+| Minimum MAF | SNPs retained | SNPs removed | Percentage retained |
+|---|---:|---:|---:|
+| 0.01 | 879,199 | 453,197 | 65.99% |
+| 0.02 | 687,360 | 645,036 | 51.59% |
+| 0.03 | 624,857 | 707,539 | 46.90% |
+| 0.05 | 536,457 | 795,939 | 40.26% |
+
+![Global MAF distribution](figures/07_maf_distribution.png)
+
+## Original filtering decision
+
+Initially, a global MAF threshold of **0.01** was selected to retain more low-frequency genetic variation potentially relevant to seascape genomic analyses.
+
+This produced a dataset containing **879,199 SNPs**.
+
+## Revised filtering decision
+
+Following further consideration, two datasets were established to allow separate downstream analyses.
+
+**Neutral dataset — MAF ≥0.05**
+
+A more stringent MAF threshold was selected to reduce the proportion of rare variants.
+
+**Adaptive dataset — MAF ≥0.01**
+
+The original, less stringent threshold was retained to preserve additional low-frequency variation.
+
+The terms *Neutral* and *Adaptive* are dataset labels. MAF filtering alone does not establish whether individual loci are neutral or adaptive.
+
+## Apply Neutral MAF filtering
+
+```bash
+vcftools \
+  --gzvcf 05_site70_mac2.vcf.gz \
+  --maf 0.05 \
+  --recode \
+  --recode-INFO-all \
+  --stdout \
+  2> Neutral_MAF005/Neutral_07_global_maf005.log \
+| bgzip -c > Neutral_MAF005/Neutral_07_global_maf005.vcf.gz
+
+bcftools index -t \
+  Neutral_MAF005/Neutral_07_global_maf005.vcf.gz
+```
+
+## Adaptive MAF dataset
+
+The previously generated MAF ≥0.01 VCF was retained and copied into the Adaptive directory.
+
+```bash
+cp 07_global_maf001.vcf.gz \
+  Adaptive_MAF001/Adaptive_07_global_maf001.vcf.gz
+
+bcftools index -t \
+  Adaptive_MAF001/Adaptive_07_global_maf001.vcf.gz
+```
+
+## Results
+
+| Dataset | MAF threshold | SNPs removed | SNPs retained | Individuals |
+|---|---|---:|---:|---:|
+| Neutral | ≥0.05 | 795,939 | **536,457** | 258 |
+| Adaptive | ≥0.01 | 453,197 | **879,199** | 258 |
+
+Both datasets were subsequently processed using identical quality-control filters.
+
+**Next step:** Maximum mean site depth filtering.
