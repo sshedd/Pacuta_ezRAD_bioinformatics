@@ -228,3 +228,108 @@ This standardizes variant representation for downstream population genomic analy
 **Adaptive:** `Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz`
 
 **Next step:** Revised allele-balance filtering.
+
+## REVISED 
+
+# 10. Allele-Balance Assessment and Revised Filtering
+
+## Objective
+
+Allele balance (AB) was examined to identify SNPs with potentially unreliable representation of reference and alternate alleles in sequencing reads.
+
+Strong allele imbalance may reflect sequencing artifacts, mapping problems, or biological processes that complicate genotype calling.
+
+## Original allele-balance assessment
+
+The original allele-balance distribution was generated from the Adaptive dataset before the revised filtering decision.
+
+![Allele-balance distribution](figures/10_allele_balance_distribution.png)
+
+The original criterion was:
+
+```text
+(AB > 0.25 AND AB < 0.75) OR AB < 0.01
+```
+
+This retained **628,402 SNPs** from an input of 839,809 SNPs.
+
+## Revised filtering decision
+
+Following discussion with advisor Maddie, the lower allele-balance threshold was increased from **0.25 to 0.30**.
+
+A clear break in the observed AB distribution supported the revised threshold.
+
+The upper threshold remained **0.75**.
+
+The original exception for `AB < 0.01` was retained to preserve consistency with the selected ezRAD filtering approach.
+
+The revised criterion was:
+
+```text
+(AB > 0.30 AND AB < 0.75) OR AB < 0.01
+```
+
+The `AB < 0.01` exception should be interpreted cautiously because its biological justification for *Pocillopora acuta* remains uncertain.
+
+## Neutral dataset
+
+**Input:** `Neutral_MAF005/Neutral_09_maf005_maxmeanDP500_LEN1.vcf.gz`
+
+```bash
+bcftools view \
+  -i '(INFO/AB>0.30 && INFO/AB<0.75) || INFO/AB<0.01' \
+  -Oz \
+  -o Neutral_MAF005/Neutral_10_allele_balance_AB030.vcf.gz \
+  Neutral_MAF005/Neutral_09_maf005_maxmeanDP500_LEN1.vcf.gz
+
+bcftools index -t \
+  Neutral_MAF005/Neutral_10_allele_balance_AB030.vcf.gz
+```
+
+## Adaptive dataset
+
+**Input:** `Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz`
+
+```bash
+bcftools view \
+  -i '(INFO/AB>0.30 && INFO/AB<0.75) || INFO/AB<0.01' \
+  -Oz \
+  -o Adaptive_MAF001/Adaptive_10_allele_balance_AB030.vcf.gz \
+  Adaptive_MAF001/Adaptive_09_maf001_maxmeanDP500_LEN1.vcf.gz
+
+bcftools index -t \
+  Adaptive_MAF001/Adaptive_10_allele_balance_AB030.vcf.gz
+```
+
+## Revised filtering results
+
+| Dataset | Input SNPs | SNPs removed | SNPs retained | Percentage removed |
+|---|---:|---:|---:|---:|
+| Neutral | 501,299 | **118,176** | **383,123** | 23.57% |
+| Adaptive | 839,809 | **275,690** | **564,119** | 32.83% |
+
+Both datasets retained **258 individuals**.
+
+## Comparison with the original allele-balance filter
+
+| Adaptive filtering criterion | SNPs retained |
+|---|---:|
+| Original: AB >0.25 and <0.75, or AB <0.01 | 628,402 |
+| Revised: AB >0.30 and <0.75, or AB <0.01 | **564,119** |
+| Additional SNPs removed by revision | **64,283** |
+
+## Interpretation
+
+Increasing the lower AB threshold removed additional SNPs with relatively low allele-balance values.
+
+The revised criterion was applied consistently to both datasets.
+
+The original results were preserved as part of the filtering decision history.
+
+## Final outputs
+
+**Neutral:** `Neutral_MAF005/Neutral_10_allele_balance_AB030.vcf.gz`
+
+**Adaptive:** `Adaptive_MAF001/Adaptive_10_allele_balance_AB030.vcf.gz`
+
+**Next step:** Mapping-quality filtering.
