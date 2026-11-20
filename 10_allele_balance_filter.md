@@ -231,28 +231,6 @@ This standardizes variant representation for downstream population genomic analy
 
 ## REVISED 
 
-# 10. Allele-Balance Assessment and Revised Filtering
-
-## Objective
-
-Allele balance (AB) was examined to identify SNPs with potentially unreliable representation of reference and alternate alleles in sequencing reads.
-
-Strong allele imbalance may reflect sequencing artifacts, mapping problems, or biological processes that complicate genotype calling.
-
-## Original allele-balance assessment
-
-The original allele-balance distribution was generated from the Adaptive dataset before the revised filtering decision.
-
-![Allele-balance distribution](figures/10_allele_balance_distribution.png)
-
-The original criterion was:
-
-```text
-(AB > 0.25 AND AB < 0.75) OR AB < 0.01
-```
-
-This retained **628,402 SNPs** from an input of 839,809 SNPs.
-
 ## Revised filtering decision
 
 Following discussion with advisor Maddie, the lower allele-balance threshold was increased from **0.25 to 0.30**.
